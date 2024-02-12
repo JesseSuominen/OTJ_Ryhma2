@@ -17,6 +17,7 @@ app.use(express.json());
 
 app.get('/', (req, res) => {
   console.log("branch commit")
+  console.log("markus commit")
   res.json({
     message: '🦄🌈✨👋🌎🌍🌏✨🌈🦄',
   });
