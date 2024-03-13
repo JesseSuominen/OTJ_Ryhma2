@@ -8,7 +8,9 @@ require('dotenv').config();
 const middlewares = require('./middlewares');
 const api = require('./api');
 
-const app = express();
+// const app = express();
+// const http = require('http');
+// const server = http.createServer(app);
 
 app.use(morgan('dev'));
 app.use(helmet());
@@ -21,6 +23,10 @@ app.get('/', (req, res) => {
   res.json({
     message: '🦄🌈✨👋🌎🌍🌏✨🌈🦄',
   });
+});
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/testIndex.html');
 });
 
 app.use('/api/v1', api);
