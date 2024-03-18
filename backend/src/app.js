@@ -12,10 +12,17 @@ const middlewares = require('./middlewares');
 const api = require('./api');
 const { Server } = require("socket.io");
 const { pbkdf2 } = require('crypto');
+const calendarMw = require('./middlewares/calendarMw');
+const chatMw = require('./middlewares/chatMw');
+const forumMw = require('./middlewares/forumMw');
+const calendarRouter = require('./routes/calendarRoute');
+const chatRouter = require('./routes/chatRoute');
+const forumRouter = require('./routes/forumRoute');
 const io = new Server(server);
 
-'pbkdf2-password'
-
+calendarRouter
+chatRouter
+forumRouter
 
 // app.use(morgan('dev'));
 // app.use(helmet());
