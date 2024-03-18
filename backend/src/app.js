@@ -11,7 +11,7 @@ require('dotenv').config();
 const middlewares = require('./middlewares');
 const api = require('./api');
 const { Server } = require("socket.io");
-const io = require('socket.io')(server);
+const io = new Server(server);
 
 
 
