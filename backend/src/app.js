@@ -11,9 +11,10 @@ require('dotenv').config();
 const middlewares = require('./middlewares');
 const api = require('./api');
 const { Server } = require("socket.io");
+const { pbkdf2 } = require('crypto');
 const io = new Server(server);
 
-
+'pbkdf2-password'
 
 
 // app.use(morgan('dev'));
@@ -29,7 +30,15 @@ const io = new Server(server);
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/testIndex.html');
 });
+const a = (req, res, next) => {
+  res.send('nop')
+  // next()
+}
 
+const b = (req, res, next) => {
+  console.log('hib')
+}
+app.get('/api', a, b)
 io.on('connection', (socket) => {
   console.log('yo');
 });
