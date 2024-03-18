@@ -20,9 +20,6 @@ const chatRouter = require('./routes/chatRoute');
 const forumRouter = require('./routes/forumRoute');
 const io = new Server(server);
 
-calendarRouter
-chatRouter
-forumRouter
 
 // app.use(morgan('dev'));
 // app.use(helmet());
@@ -45,7 +42,10 @@ const a = (req, res, next) => {
 const b = (req, res, next) => {
   console.log('hib')
 }
-app.get('/api', a, b)
+app.get('/api/chat', chatMw, chatRouter)
+app.get('/api/forum', forumMw, forumRouter)
+app.get('/api/calendar', calendarMw, calendarRouter)
+
 io.on('connection', (socket) => {
   console.log('yo');
 });
