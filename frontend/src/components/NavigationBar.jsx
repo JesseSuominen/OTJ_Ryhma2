@@ -1,13 +1,13 @@
-import {link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 const NavigattionBar = () => {
     return(
         <>
             <nav>
                 <ul>
-                    <li Link to='/'>Home</li>
-                    <li Link to='/calendar'>Calendar</li>
-                    <li Link to='/chat'>Chat</li>
+                    <li><Link to='/'>Home</Link></li>
+                    <li><Link to='/calendar'>Calendar</Link></li>
+                    <li><Link to='/chat'>Chat</Link></li>
                 </ul>
             </nav>
         </>
