@@ -1,7 +1,7 @@
 const Chat = () => {
     return (
         <>
-            <h1>Hello</h1>
+            <h1>Chat</h1>
         </>
     )
 }
