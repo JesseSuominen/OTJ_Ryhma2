@@ -8,17 +8,20 @@ const server = http.createServer(app);
 
 require('dotenv').config();
 
-const middlewares = require('./middlewares');
-const api = require('./api');
 const { Server } = require("socket.io");
 const { pbkdf2 } = require('crypto');
 const calendarMw = require('./middlewares/calendarMw');
 const chatMw = require('./middlewares/chatMw');
-const forumMw = require('./middlewares/forumMw');
+// const forumMw = require('./middlewares/forumMw');
 const calendarRouter = require('./routes/calendarRoute');
 const chatRouter = require('./routes/chatRoute');
-const forumRouter = require('./routes/forumRoute');
+
 const io = new Server(server);
+
+//to be done if time left
+// const forumRouter = require('./routes/forumRoute');
+// app.get('/api/forum', forumMw, forumRouter)
+
 
 
 // app.use(morgan('dev'));
@@ -26,24 +29,11 @@ const io = new Server(server);
 // app.use(cors());
 // app.use(express.json());
 
-// app.use('/api/v1', api);
-
-// app.use(middlewares.notFound);
-// app.use(middlewares.errorHandler);
-
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/testIndex.html');
 });
-const a = (req, res, next) => {
-  res.send('nop')
-  // next()
-}
 
-const b = (req, res, next) => {
-  console.log('hib')
-}
 app.get('/api/chat', chatMw, chatRouter)
-app.get('/api/forum', forumMw, forumRouter)
 app.get('/api/calendar', calendarMw, calendarRouter)
 
 io.on('connection', (socket) => {
