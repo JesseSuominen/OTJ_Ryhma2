@@ -49,7 +49,7 @@ INSERT INTO message
 VALUES
     ( 1, 1, 1
     , 'This is a test message that can be potentially really long.'
-    , '2024-03-22 13:13:13', )
+    , '2024-03-22 13:13:13')
 ;
 
 -- End of file

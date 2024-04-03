@@ -32,6 +32,9 @@ based on "npx create-express-api -d backend" -template
 ON FRESH CLONE DO THESE:
 - "npm i" install packages
 - "npm start" start server
+
+PACKAGES FOR npm
+- "npm install --save sqlite3"
  
 
 
