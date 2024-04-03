@@ -3,13 +3,13 @@ var forumRouter = express.Router();
 
 
 forumRouter.use('/', (req, res, next) => {
-    res.send('here are messages')
+  res.send('here are messages')
 
 })
 
 forumRouter.get('/', (req, res, next) => {
 
-    res.send('USER')
+  res.send('USER')
 })
 
 module.exports = forumRouter;
