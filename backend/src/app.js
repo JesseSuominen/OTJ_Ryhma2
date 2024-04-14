@@ -15,6 +15,7 @@ const chatMw = require('./middlewares/chatMw');
 // const forumMw = require('./middlewares/forumMw');
 const calendarRouter = require('./routes/calendarRoute');
 const chatRouter = require('./routes/chatRoute');
+const apiRouter = require('./api/index');
 
 const io = new Server(server);
 
@@ -27,7 +28,10 @@ const io = new Server(server);
 // app.use(morgan('dev'));
 // app.use(helmet());
 // app.use(cors());
-// app.use(express.json());
+app.use(express.json());
+
+// Mount the API router at '/api'
+app.use('/api', apiRouter);
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/testIndex.html');
