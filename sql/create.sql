@@ -37,7 +37,7 @@ CREATE TABLE workhour
 CREATE TABLE chatroom
 (
     id              INTEGER     PRIMARY KEY     NOT NULL    UNIQUE
-    , name          VARCHAR(80)                 NOT NULL
+    , name          VARCHAR(80)                 NOT NULL    UNIQUE
     , description   VARCHAR(2000)
     , type          INTEGER
 );
