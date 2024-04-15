@@ -13,6 +13,7 @@ const HTTP_STATUS_NOK = 404;
 const INTERNAL_ERROR = 500;
 
 // Returns usernames
+// curl --silent --include "http://localhost:5000/api/v1/user/usernames"
 router.get('/v1/user/usernames', (req, res) => {
   const SQL_SELECT = `
     SELECT username
@@ -31,7 +32,8 @@ router.get('/v1/user/usernames', (req, res) => {
 });
 
 // Returns password belonging to the username
-router.get('/v1/user', (req, res) => {
+// curl --silent --include "http://localhost:5000/api/v1/user/password?username=matti_meika"
+router.get('/v1/user/password', (req, res) => {
   const { username } = req.query;
   if (!username) {
     return res.status(BAD_REQUEST).json({ error: 'Username parameter is required' });
@@ -56,7 +58,8 @@ router.get('/v1/user', (req, res) => {
 
 // Inserts user into user table
 // username and password can't be null
-router.post('/v1/user/password', (req, res) => {
+// curl -X POST http://localhost:5000/api/v1/user/password -H "Content-Type: application/json" -d '{"username": "added_user", "password": "generic_pw"}'
+router.post('/v1/user', (req, res) => {
   const { username, password } = req.body;
   if (!username || !password) {
     return res.status(BAD_REQUEST).json({ error: 'Username and password are required' });
@@ -77,3 +80,30 @@ router.post('/v1/user/password', (req, res) => {
 });
 
 module.exports = router;
+
+// Returns messages of a chatroom
+// curl --silent --include "http://localhost:5000/api/v1/chatroom?id=1"
+router.get('/v1/user/chatroom', (req, res) => {
+  const { id } = req.query;
+  if (!id) {
+    return res.status(BAD_REQUEST).json({ error: 'Chatroom id parameter is required' });
+  }
+  const SQL_SELECT = `
+    SELECT  id
+            , name
+            , description
+            , type
+    FROM    chatroom
+    WHERE   id = ?
+  `;
+  db.get(SQL_SELECT, [id], (err, row) => {
+    if (err) {
+      console.error('Error fetching chatroom:', err);
+      return res.status(INTERNAL_ERROR).json({ error: 'Something unexpected went wrong' });
+    }
+    if (!row) {
+      return res.status(HTTP_STATUS_NOK).json({ error: 'Chatroom not found' });
+    }
+    res.status(HTTP_STATUS_OK).json(row);
+  });
+});
