@@ -10,7 +10,7 @@ CREATE TABLE user
 (
     id              INTEGER     PRIMARY KEY     NOT NULL    UNIQUE
     , username      VARCHAR(80)                 NOT NULL    UNIQUE
-    , password      VARCHAR(80)                 NOT NULL
+    , password      VARCHAR(1000)                 NOT NULL
 );
 
 CREATE TABLE event
