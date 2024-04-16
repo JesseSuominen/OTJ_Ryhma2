@@ -18,7 +18,7 @@ const userMw = require('./middlewares/userMw');
 // const forumMw = require('./middlewares/forumMw');
 const calendarRouter = require('./routes/calendarRoute');
 const chatRouter = require('./routes/chatRoute');
-const userRouter = require('./api/index');
+const userRouter = require('./routes/userRoute');
 
 const io = new Server(server);
 
@@ -35,9 +35,9 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/testIndex.html');
 });
 
-app.get('/api/chat', chatMw, chatRouter)
-app.get('/api/calendar', calendarMw, calendarRouter)
-app.get('/api/user', userMw, userRouter)
+app.use('/api/chat', chatMw, chatRouter)
+app.use('/api/calendar', calendarMw, calendarRouter)
+app.use('/api/user', userMw, userRouter)
 
 io.on('connection', (socket) => {
   console.log('yo');
@@ -46,7 +46,7 @@ io.on('connection', (socket) => {
 const port = process.env.PORT || 5000;
 server.listen(port, () => {
   /* eslint-disable no-console */
-  console.log(`Listening: http://localhost:5000`);
+  console.log(`Listening: http://localhost:${port}`);
   /* eslint-enable no-console */
 });
 

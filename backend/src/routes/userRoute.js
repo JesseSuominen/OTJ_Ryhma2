@@ -1,10 +1,17 @@
 var express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 var userRouter = express.Router();
+const db = new sqlite3.Database('./database.db');
+
+const HTTP_STATUS_OK = 200;
+const HTTP_STATUS_CREATED = 201;
+const BAD_REQUEST = 400;
+const HTTP_STATUS_NOK = 404;
+const INTERNAL_ERROR = 500;
 
 // Returns usernames
 // curl --silent --include "http://localhost:5000/api/user/usernames"
-router.get('/usernames', (req, res) => {
+userRouter.get('/usernames', (req, res) => {
     const SQL_SELECT = `
       SELECT  username
       FROM    user
@@ -22,8 +29,8 @@ router.get('/usernames', (req, res) => {
   });
 
   // Returns password belonging to the username
-  // curl --silent --include "http://localhost:5000/api/v1/user/password?username=matti_meika"
-  router.get('/v1/user/password', (req, res) => {
+  // curl --silent --include "http://localhost:5000/api/user/password?username=matti_meika"
+  userRouter.get('/password', (req, res) => {
     const { username } = req.query;
     if (!username) {
       return res.status(BAD_REQUEST).json({ error: 'Username parameter is required' });
@@ -47,8 +54,8 @@ router.get('/usernames', (req, res) => {
 
   // Inserts user into user table
   // username and password can't be null
-  // curl -X POST http://localhost:5000/api/v1/user/password -H "Content-Type: application/json" -d '{"username": "added_user", "password": "generic_pw"}'
-  router.post('/v1/user', (req, res) => {
+  // curl -X POST http://localhost:5000/api/user -H "Content-Type: application/json" -d '{"username": "added_user", "password": "generic_pw"}'
+  userRouter.post('', (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) {
       return res.status(BAD_REQUEST).json({ error: 'Username and password are required' });

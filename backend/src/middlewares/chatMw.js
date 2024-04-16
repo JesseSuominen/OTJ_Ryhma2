@@ -1,5 +1,5 @@
 const chatMw = (req, res, next) => {
-    console.log('chatMw')
+    console.log('chatMw and chatRoute used')
     next()
 }
 

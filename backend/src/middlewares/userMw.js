@@ -1,5 +1,5 @@
 const userMw = (req, res, next) => {
-    console.log('userMw')
+    console.log('userMw and userRoute used')
     next()
 }
 
