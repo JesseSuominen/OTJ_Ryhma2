@@ -39,10 +39,7 @@ chatRouter.get('/room', (req, res) => {
     return res.status(BAD_REQUEST).json({ error: 'Chatroom id parameter is required' });
   }
   const SQL_SELECT = `
-      SELECT  id
-              , name
-              , description
-              , type
+      SELECT  *
       FROM    chatroom
       WHERE   id = ?
     `;
@@ -66,11 +63,7 @@ chatRouter.get('/messages', (req, res) => {
     return res.status(BAD_REQUEST).json({ error: 'Chatroom id parameter is required' });
   }
   const SQL_SELECT = `
-      SELECT      u.username
-                  AS "sender"
-                  , m.datetime
-                  , m.text
-                  AS "message"
+      SELECT      *
       FROM        message AS m
       INNER JOIN  chatroom AS c
               ON  m.chatroom_id = c.id
