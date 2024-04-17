@@ -7,23 +7,23 @@
 -- Deleting test data from tables:
 
 DELETE FROM     user
-WHERE           id = 1
+WHERE           id BETWEEN 1 AND 10
 ;
 
 DELETE FROM     event
-WHERE           id = 1
+WHERE           id BETWEEN 1 AND 10
 ;
 
 DELETE FROM     workhour
-WHERE           id = 1
+WHERE           id BETWEEN 1 AND 10
 ;
 
 DELETE FROM     chatroom
-WHERE           id = 1
+WHERE           id BETWEEN 1 AND 10
 ;
 
 DELETE FROM     message
-WHERE           id = 1
+WHERE           id BETWEEN 1 AND 10
 ;
 
 -- End of file

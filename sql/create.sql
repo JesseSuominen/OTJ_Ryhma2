@@ -10,7 +10,7 @@ CREATE TABLE user
 (
     id              INTEGER     PRIMARY KEY     NOT NULL    UNIQUE
     , username      VARCHAR(80)                 NOT NULL    UNIQUE
-    , password      VARCHAR(1000)                 NOT NULL
+    , password      VARCHAR(1000)               NOT NULL
 );
 
 CREATE TABLE event
@@ -37,7 +37,7 @@ CREATE TABLE workhour
 CREATE TABLE chatroom
 (
     id              INTEGER     PRIMARY KEY     NOT NULL    UNIQUE
-    , name          VARCHAR(80)                 NOT NULL
+    , name          VARCHAR(80)                 NOT NULL    UNIQUE
     , description   VARCHAR(2000)
     , type          INTEGER
 );
