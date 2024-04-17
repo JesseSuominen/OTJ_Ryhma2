@@ -6,8 +6,6 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 
-const sqlite3 = require('sqlite3').verbose();
-
 require('dotenv').config();
 
 const { Server } = require("socket.io");

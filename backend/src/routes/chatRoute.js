@@ -1,13 +1,35 @@
 var express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 var chatRouter = express.Router();
-const db = new sqlite3.Database('./database.db');
+
+const path = require('path');
+const dbPath = path.resolve(__dirname, '../../database.db');
+const db = new sqlite3.Database(dbPath);
 
 const HTTP_STATUS_OK = 200;
 const HTTP_STATUS_CREATED = 201;
 const BAD_REQUEST = 400;
 const HTTP_STATUS_NOK = 404;
 const INTERNAL_ERROR = 500;
+
+// Returns all chatrooms
+// curl --silent --include "http://localhost:5000/api/chat/rooms"
+chatRouter.get('/rooms', (req, res) => {
+  const SQL_SELECT = `
+    SELECT      *
+    FROM        chatroom
+  `;
+  db.all(SQL_SELECT, (err, rows) => {
+    if (err) {
+      console.error('Error fetching chatrooms:', err);
+      return res.status(INTERNAL_ERROR).json({ error: 'Something unexpected went wrong' });
+    }
+    if (!rows || rows.length === 0) {
+      return res.status(HTTP_STATUS_NOK).json({ error: 'Chatrooms not found' });
+    }
+    res.status(HTTP_STATUS_OK).json(rows);
+  });
+});
 
 // Returns info of a chatroom by chatroom id
 // curl --silent --include "http://localhost:5000/api/chat/room?id=1"

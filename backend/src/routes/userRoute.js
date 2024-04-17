@@ -1,7 +1,10 @@
 var express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 var userRouter = express.Router();
-const db = new sqlite3.Database('./database.db');
+
+const path = require('path');
+const dbPath = path.resolve(__dirname, '../../database.db');
+const db = new sqlite3.Database(dbPath);
 
 const HTTP_STATUS_OK = 200;
 const HTTP_STATUS_CREATED = 201;
