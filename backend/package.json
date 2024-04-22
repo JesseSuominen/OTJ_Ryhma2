@@ -3,6 +3,7 @@
   "version": "1.2.0",
   "description": "A basic starter for an express.js API",
   "main": "index.js",
+  
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js",
