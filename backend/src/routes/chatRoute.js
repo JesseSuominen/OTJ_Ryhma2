@@ -129,4 +129,49 @@ chatRouter.post('/message', (req, res) => {
   });
 });
 
+// Update room's info by chatroom id
+// curl -X PUT http://localhost:5000/api/chat/room/update/1 -H "Content-Type: application/json" -d '{"name" : "new name", "description" : "new description", "type" : 0}'
+chatRouter.put('/room/update/:id', (req, res) => {
+  const id = req.params.id
+  const { name, description, type } = req.body
+
+  const SQL_UPDATE = `
+    UPDATE  chatroom
+    SET     name = ?
+            , description = ?
+            , type = ?
+    WHERE   id = ?
+  `;
+  db.run(SQL_UPDATE, [name, description, type, id], function (err) {
+    if (err) {
+      return res.status(BAD_REQUEST).json({ error: 'Failed to update chatroom' });
+    }
+    if (this.changes === 0) {
+      // No rows were affected by the UPDATE operation
+      return res.status(HTTP_STATUS_NOK).json({ error: 'Chatroom id not found' });
+    }
+    res.status(HTTP_STATUS_OK).json({ message: 'Chatroom updated successfully' });
+  });
+});
+
+// Delete chatroom
+// curl -X DELETE http://localhost:5000/api/chat/room/delete/1
+chatRouter.delete('/room/delete/:id', (req, res) => {
+  const id = req.params.id
+
+  const SQL_DELETE = `
+    DELETE FROM   chatroom
+    WHERE         id = ?
+    `
+  db.run(SQL_DELETE, [id], function (err) {
+    if (err) {
+      return res.status(BAD_REQUEST).json({ error: 'Failed to delete chatroom' });
+    }
+    if (this.changes === 0) {
+      return res.status(HTTP_STATUS_NOK).json({ error: 'Chatroom id not found' });
+    }
+    res.status(HTTP_STATUS_OK).json({ message: 'Chatroom deleted successfully' });
+  });
+});
+
 module.exports = chatRouter;
