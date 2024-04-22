@@ -1,23 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Typography } from '@mui/material';
 import JoinChatRoom from '../components/JoinChatRoom';
 import AddChatRoom from '../components/AddChatRoom';
-
-// Mock data
-const chatrooms = [
-    { id: 1, name: 'Chatroom 1', description: 'This is chatroom 1', type: 1 },
-    { id: 2, name: 'Chatroom 2', description: 'This is chatroom 2', type: 2 },
-    // Add more chatrooms as needed
-];
+import { SetChatroomsContext } from '../contexts/SetChatroomsContext';
 
 const Chat = () => {
+    const [chatrooms, setChatrooms] = useState([]); // Add a useState hook for the chatrooms
+
+    useEffect(() => {
+        // Fetch the chatrooms from the /api/chat/rooms route
+        fetch('http://localhost:5000/api/chat/rooms')
+            .then((response) => response.json())
+            .then((data) => setChatrooms(data)) // Update the chatrooms state with the fetched data
+            .catch((error) => console.error('Error:', error));
+    }, []); // Add an empty dependency array so the effect only runs once
     return (
-        <div>
-            <AddChatRoom/>
-            {chatrooms.map((chatroom) => (
-                <JoinChatRoom key={chatroom.id} chatroom={chatroom} />
-            ))}
-        </div>
+        <SetChatroomsContext.Provider value={setChatrooms}> {/* Provide the setChatrooms function */}
+            <div>
+                <AddChatRoom/>
+                {chatrooms.map((chatroom) => (
+                    <JoinChatRoom key={chatroom.id} chatroom={chatroom}  />
+                ))}
+            </div>
+        </SetChatroomsContext.Provider>
     );
 };
 
