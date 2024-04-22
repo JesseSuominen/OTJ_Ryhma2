@@ -124,4 +124,50 @@ calendarRouter.post('/hour', (req, res) => {
   });
 });
 
+// Update event's info by event id
+// curl -X PUT http://localhost:5000/api/calendar/event/update/1 -H "Content-Type: application/json" -d '{"name" : "new name", "description" : "new description", "start_date" : "2024-04-22", "end_date" : "2024-04-29"}'
+calendarRouter.put('/event/update/:id', (req, res) => {
+  const id = req.params.id
+  const { name, description, start_date, end_date } = req.body
+
+  const SQL_UPDATE = `
+    UPDATE  event
+    SET     name = ?
+            , description = ?
+            , start_date = ?
+            , end_date = ?
+    WHERE   id = ?
+  `;
+  db.run(SQL_UPDATE, [name, description, start_date, end_date, id], function (err) {
+    if (err) {
+      return res.status(BAD_REQUEST).json({ error: 'Failed to update event' });
+    }
+    if (this.changes === 0) {
+      // No rows were affected by the UPDATE operation
+      return res.status(HTTP_STATUS_NOK).json({ error: 'Event id not found' });
+    }
+    res.status(HTTP_STATUS_OK).json({ message: 'Event updated successfully' });
+  });
+});
+
+// Delete event
+// curl -X DELETE http://localhost:5000/api/calendar/event/delete/1
+calendarRouter.delete('/event/delete/:id', (req, res) => {
+  const id = req.params.id
+
+  const SQL_DELETE = `
+    DELETE FROM   event
+    WHERE         id = ?
+    `
+  db.run(SQL_DELETE, [id], function (err) {
+    if (err) {
+      return res.status(BAD_REQUEST).json({ error: 'Failed to delete event' });
+    }
+    if (this.changes === 0) {
+      return res.status(HTTP_STATUS_NOK).json({ error: 'Event id not found' });
+    }
+    res.status(HTTP_STATUS_OK).json({ message: 'Event deleted successfully' });
+  });
+});
+
 module.exports = calendarRouter;

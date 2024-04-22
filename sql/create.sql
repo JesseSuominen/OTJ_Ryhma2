@@ -11,6 +11,7 @@ CREATE TABLE user
     id              INTEGER     PRIMARY KEY     NOT NULL    UNIQUE
     , username      VARCHAR(80)                 NOT NULL    UNIQUE
     , password      VARCHAR(1000)               NOT NULL
+    , email         VARCHAR(80)
 );
 
 CREATE TABLE event

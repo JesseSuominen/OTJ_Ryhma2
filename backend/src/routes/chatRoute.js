@@ -174,4 +174,24 @@ chatRouter.delete('/room/delete/:id', (req, res) => {
   });
 });
 
+// Delete message
+// curl -X DELETE http://localhost:5000/api/chat/message/delete/1
+chatRouter.delete('/message/delete/:id', (req, res) => {
+  const id = req.params.id
+
+  const SQL_DELETE = `
+    DELETE FROM   message
+    WHERE         id = ?
+    `
+  db.run(SQL_DELETE, [id], function (err) {
+    if (err) {
+      return res.status(BAD_REQUEST).json({ error: 'Failed to delete message' });
+    }
+    if (this.changes === 0) {
+      return res.status(HTTP_STATUS_NOK).json({ error: 'Message id not found' });
+    }
+    res.status(HTTP_STATUS_OK).json({ message: 'Message deleted successfully' });
+  });
+});
+
 module.exports = chatRouter;
