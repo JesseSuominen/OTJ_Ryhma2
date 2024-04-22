@@ -170,4 +170,49 @@ calendarRouter.delete('/event/delete/:id', (req, res) => {
   });
 });
 
+// Update workhours' info by workhour id
+// curl -X PUT http://localhost:5000/api/calendar/hour/update/1 -H "Content-Type: application/json" -d '{"amount" : 0, "name" : "new name", "date" : "2024-04-29"}'
+calendarRouter.put('/hour/update/:id', (req, res) => {
+  const id = req.params.id
+  const { amount, name, date } = req.body
+
+  const SQL_UPDATE = `
+    UPDATE  workhour
+    SET     amount = ?
+            , name = ?
+            , date = ?
+    WHERE   id = ?
+  `;
+  db.run(SQL_UPDATE, [amount, name, date, id], function (err) {
+    if (err) {
+      return res.status(BAD_REQUEST).json({ error: 'Failed to update workhours' });
+    }
+    if (this.changes === 0) {
+      // No rows were affected by the UPDATE operation
+      return res.status(HTTP_STATUS_NOK).json({ error: 'Workhour id not found' });
+    }
+    res.status(HTTP_STATUS_OK).json({ message: 'Workhours updated successfully' });
+  });
+});
+
+// Delete event
+// curl -X DELETE http://localhost:5000/api/calendar/hour/delete/1
+calendarRouter.delete('/hour/delete/:id', (req, res) => {
+  const id = req.params.id
+
+  const SQL_DELETE = `
+    DELETE FROM   workhour
+    WHERE         id = ?
+    `
+  db.run(SQL_DELETE, [id], function (err) {
+    if (err) {
+      return res.status(BAD_REQUEST).json({ error: 'Failed to delete workhours' });
+    }
+    if (this.changes === 0) {
+      return res.status(HTTP_STATUS_NOK).json({ error: 'Workhour id not found' });
+    }
+    res.status(HTTP_STATUS_OK).json({ message: 'Workhours deleted successfully' });
+  });
+});
+
 module.exports = calendarRouter;
