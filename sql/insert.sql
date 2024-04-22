@@ -9,9 +9,9 @@
 -- user:
 
 INSERT INTO user
-    ( id, username, password )
+    ( id, username, password, email )
 VALUES
-    ( 1, 'user', "password" )
+    ( 1, 'user', "password", "email" )
 ;
 
 -- event:
@@ -57,17 +57,17 @@ VALUES
 -- user:
 
 INSERT INTO user
-    ( id, username, password )
+    ( id, username, password, email )
 VALUES
-    ( 2, 'john_doe', "securepassword" ),
-    ( 3, 'jane_smith', "strongpassword" ),
-    ( 4, 'bob_roberts', "password123" ),
-    ( 5, 'alice_green', "abc123" ),
-    ( 6, 'sam_williams', "letmein" ),
-    ( 7, 'emily_jones', "qwerty" ),
-    ( 8, 'david_brown', "iloveyou" ),
-    ( 9, 'susan_clark', "123456" ),
-    ( 10, 'mike_taylor', "mypassword" )
+    ( 2, 'john_doe', "securepassword", "asd@user.com" ),
+    ( 3, 'jane_smith', "strongpassword", null ),
+    ( 4, 'bob_roberts', "password123", null ),
+    ( 5, 'alice_green', "abc123", null ),
+    ( 6, 'sam_williams', "letmein", null ),
+    ( 7, 'emily_jones', "qwerty", null ),
+    ( 8, 'david_brown', "iloveyou", "david@brown.com" ),
+    ( 9, 'susan_clark', "123456", null ),
+    ( 10, 'mike_taylor', "mypassword", null )
 ;
 
 -- event:
@@ -77,19 +77,19 @@ INSERT INTO event
     , start_date, end_date )
 VALUES
     ( 2, 2, 'Birthday Party', 'John Does birthday celebration'
-    , '2024-04-10', '2024-04-10'),
+    , '2024-04-10', null),
     ( 3, 3, 'Conference', 'Tech conference for professionals'
     , '2024-05-15', '2024-05-17'),
     ( 4, 4, 'Training Workshop', 'Workshop on project management'
     , '2024-06-20', '2024-06-21'),
     ( 5, 5, 'Charity Event', 'Fundraising event for local charity'
-    , '2024-07-05', '2024-07-05'),
+    , '2024-07-05', null),
     ( 6, 6, 'Music Festival', 'Annual music festival in the city'
     , '2024-08-15', '2024-08-17'),
     ( 7, 7, 'Product Launch', 'Launch event for new product line'
-    , '2024-09-25', '2024-09-25'),
+    , '2024-09-25', null),
     ( 8, 8, 'Family Reunion', 'Gathering of Brown family members'
-    , '2024-10-10', '2024-10-10'),
+    , '2024-10-10', null),
     ( 9, 9, 'Sports Tournament', 'Local soccer tournament'
     , '2024-11-15', '2024-11-17'),
     ( 10, 10, 'Art Exhibition', 'Showcasing works of local artists'
