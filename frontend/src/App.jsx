@@ -16,7 +16,7 @@ const router = createBrowserRouter([
       { path: '/calendar', element: <Calendar />},
       { path: '/chat', element: <Chat />},
       { path: '/chat/room/:id', element: <ChatRoom />},
-    ]  
+    ]
   }
 ]);
 
