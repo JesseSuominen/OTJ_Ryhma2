@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { styled } from '@mui/system';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
-import LoginModal from '../components/LoginModal'; // Import LoginModal component
-import SignupModal from '../components/SignupModal'; // Import SignupModal component
+import LoginModal from '../components/LoginModal';
+import SignupModal from '../components/SignupModal';
 
 const Home = () => {
   const [loginOpen, setLoginOpen] = useState(false); // State to manage login modal visibility
