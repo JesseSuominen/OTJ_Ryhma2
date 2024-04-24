@@ -97,7 +97,7 @@ const registerUser = async (req, res) => {
         FROM      user
         WHERE   username = ?
       `;
-    let a = null
+
     await db.get(SQL_SELECT, [username], async (err, row) => {
       if (err) {
         return res.status(500).json({message: "Something went wrong"})
@@ -105,7 +105,7 @@ const registerUser = async (req, res) => {
         
         if(row) {
           if(row.username) {
-            a = true;
+
             return res.status(422).json({message: "user exists"})
             
           } 
@@ -126,9 +126,12 @@ const registerUser = async (req, res) => {
               console.error('Error inserting user:', err);
               return res.status(BAD_REQUEST).json({ error: 'Failed to create user' });
             }
+            const id = this.lastID;
+
             const token = jwt.sign(
                   {
                     username,
+                    user_id: id,
                   },
                   process.env.JWT_KEY,
                   { expiresIn: '1h' }
@@ -137,7 +140,8 @@ const registerUser = async (req, res) => {
                 return res.status(HTTP_STATUS_CREATED).json(
                   {
                     username,
-                    token
+                    token,
+                    user_id: id,
                   }
                 )
           });
@@ -146,7 +150,7 @@ const registerUser = async (req, res) => {
         
       }
     });
-    console.log(a)
+
   } catch (err) {
     console.log(err)
     return res.status(500).json({message: "Something went wrong"})
@@ -180,7 +184,7 @@ const loginUser = async (req, res) => {
         FROM      user
         WHERE   username = ?
       `;
-    let a = null
+
     await db.get(SQL_SELECT, [username], async (err, row) => {
       if (err) {
         return res.status(500).json({message: "Something went wrong"})
@@ -188,16 +192,15 @@ const loginUser = async (req, res) => {
         
         if(row) {
           if(row.username) {
-            a = true;
-            console.log(row)
-            console.log("333333333")
-            console.log(row.password)
+
+            
             let isValid = await bcrypt.compare(password, row.password);
             if(!isValid) {
               return res.status(401).json({message: "Invalid password"})
             }
             const token = jwt.sign(
               {
+                user_id: row.id,
                 username,
               },
               process.env.JWT_KEY,
@@ -207,7 +210,8 @@ const loginUser = async (req, res) => {
             return res.status(HTTP_STATUS_OK).json(
               {
                 username,
-                token
+                token,
+                user_id: row.id,
               }
             )
             
@@ -219,7 +223,7 @@ const loginUser = async (req, res) => {
         
       }
     });
-    console.log(a)
+
   } catch (err) {
     console.log(err)
     return res.status(500).json({message: "Something went wrong"})
