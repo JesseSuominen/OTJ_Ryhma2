@@ -1,0 +1,38 @@
+.month_and_year {
+    text-align: center;
+    padding: 2;
+}
+
+.grid_calendar{
+    container:initial;
+    grid-template-columns:minmax(7);
+    grid-template-rows: minmax(6,7);
+    max-width: 60%;
+}
+
+.grid_weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); 
+    gap: 8px; 
+    max-width: 60%;
+}
+
+.grid_weekdays > div {
+    border: 1px solid #ddd; 
+    border-radius: 4px;
+    padding: 8px; 
+    text-align: center;
+  }
+
+ 
+.grid_weekdays > div.isToday {
+    background-color: #767373;
+    color: #333; 
+    font-weight: bold;
+}
+
+.progress_stats {
+    display: flex;
+    justify-content: center;
+}
+
