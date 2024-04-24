@@ -49,7 +49,7 @@ const Calendar = () => {
         })}
 
         {Array.from({ length: startingDayIndex }).map((_, index) => {
-          return <div key={`empty- ${index}`} 
+          return <div key={`empty- ${index}`}
           onMouseOver={() => setIsHovered(true)}
           onMouseOut={() => setIsHovered(false)}
           style={isHovered ? hoveredButtonStyle : buttonStyle}/>
