@@ -33,9 +33,9 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/testIndex.html');
 });
 
-app.use('/api/chat', chatMw, chatRouter)
-app.use('/api/calendar', calendarMw, calendarRouter)
-app.use('/api/user', userMw, userRouter)
+app.use('/api/chat', userMw, chatMw, chatRouter)
+app.use('/api/calendar', userMw, calendarMw, calendarRouter)
+app.use('/api/user', userRouter)
 
 io.on('connection', (socket) => {
   console.log('yo');
