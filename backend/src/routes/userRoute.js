@@ -1,6 +1,10 @@
 var express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 var userRouter = express.Router();
+const bcrypt = require('bcryptjs');
+const { v4 } = require('uuid');
+const jwt = require('jsonwebtoken')
+
 
 const path = require('path');
 const dbPath = path.resolve(__dirname, '../../database.db');
@@ -33,6 +37,9 @@ userRouter.get('/usernames', (req, res) => {
   });
 });
 
+
+
+
 // Returns password belonging to the user id
 // curl --silent --include "http://localhost:5000/api/user/password?id=1"
 userRouter.get('/password', (req, res) => {
@@ -57,28 +64,170 @@ userRouter.get('/password', (req, res) => {
   });
 });
 
+
+
+
+
+
+
 // Inserts user into user table
 // username and password can't be null
 // curl -X POST http://localhost:5000/api/user/post -H "Content-Type: application/json" -d '{"username": "added_user", "password": "generic_pw"}'
-userRouter.post('/post', (req, res) => {
+
+const registerUser = async (req, res) => {
   const { username, password } = req.body;
+
+  const hashPassword = async () => {
+    try {
+      return await bcrypt.hash(password, 12);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({message: "Something went wrong"});
+    }
+  }
+  console.log('uo')
   if (!username || !password) {
     return res.status(BAD_REQUEST).json({ error: 'Username and password are required' });
   }
-  const SQL_INSERT = `
-    INSERT INTO user
-      (username, password)
-    VALUES
-      (?, ?)
-    `;
-  db.run(SQL_INSERT, [username, password], function (err) {
-    if (err) {
-      console.error('Error inserting user:', err);
-      return res.status(BAD_REQUEST).json({ error: 'Failed to create user' });
+
+  try {
+    const SQL_SELECT = `
+        SELECT    id,
+                  username
+        FROM      user
+        WHERE   username = ?
+      `;
+    let a = null
+    await db.get(SQL_SELECT, [username], async (err, row) => {
+      if (err) {
+        return res.status(500).json({message: "Something went wrong"})
+      } else {
+        
+        if(row) {
+          if(row.username) {
+            a = true;
+            return res.status(422).json({message: "user exists"})
+            
+          } 
+        } else {
+          
+          let hashedPw = await hashPassword();
+
+
+          const SQL_INSERT = `
+          INSERT INTO user
+            (username, password)
+          VALUES
+            (?, ?)
+          `;
+
+          await db.run(SQL_INSERT, [username, hashedPw], function (err) {
+            if (err) {
+              console.error('Error inserting user:', err);
+              return res.status(BAD_REQUEST).json({ error: 'Failed to create user' });
+            }
+            const token = jwt.sign(
+                  {
+                    username,
+                  },
+                  process.env.JWT_KEY,
+                  { expiresIn: '1h' }
+                )
+            
+                return res.status(HTTP_STATUS_CREATED).json(
+                  {
+                    username,
+                    token
+                  }
+                )
+          });
+        }
+        
+        
+      }
+    });
+    console.log(a)
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({message: "Something went wrong"})
+  }
+
+}
+
+userRouter.post('/signup', registerUser);
+
+const loginUser = async (req, res) => {
+  const { username, password } = req.body;
+
+  const hashPassword = async () => {
+    try {
+      return await bcrypt.hash(password, 12);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({message: "Something went wrong"});
     }
-    res.status(HTTP_STATUS_CREATED).json({ message: 'User created successfully' });
-  });
-});
+  }
+  console.log('uo')
+  if (!username || !password) {
+    return res.status(BAD_REQUEST).json({ error: 'Username and password are required' });
+  }
+
+  try {
+    const SQL_SELECT = `
+        SELECT    id,
+                  username,
+                  password
+        FROM      user
+        WHERE   username = ?
+      `;
+    let a = null
+    await db.get(SQL_SELECT, [username], async (err, row) => {
+      if (err) {
+        return res.status(500).json({message: "Something went wrong"})
+      } else {
+        
+        if(row) {
+          if(row.username) {
+            a = true;
+            console.log(row)
+            console.log("333333333")
+            console.log(row.password)
+            let isValid = await bcrypt.compare(password, row.password);
+            if(!isValid) {
+              return res.status(401).json({message: "Invalid password"})
+            }
+            const token = jwt.sign(
+              {
+                username,
+              },
+              process.env.JWT_KEY,
+              { expiresIn: '1h' }
+            )
+            
+            return res.status(HTTP_STATUS_OK).json(
+              {
+                username,
+                token
+              }
+            )
+            
+          } 
+        } else {
+          return res.status(401).json({message: "Invalid username"})
+        }
+        
+        
+      }
+    });
+    console.log(a)
+  } catch (err) {
+    console.log(err)
+    return res.status(500).json({message: "Something went wrong"})
+  }
+
+}
+
+userRouter.post('/login', loginUser);
 
 // Update user's password by user's id
 // curl -X PUT http://localhost:5000/api/user/update/1 -H "Content-Type: application/json" -d '{"password": "new_password123"}'

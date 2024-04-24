@@ -10,17 +10,24 @@ const AddChatRoomModal = ({ open, handleClose }) => {
         event.preventDefault();
 
         // Make a POST request to the /api/chat route with the form contents
+        const storedData = JSON.parse(localStorage.getItem('token'));
         fetch('http://localhost:5000/api/chat', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${storedData.token}`
             },
             body: JSON.stringify({ name, description }), // Send the name and description as the request body
         })
             .then((response) => response.json())
             .then((data) => {
                 console.log('Success:', data);
-                fetch('http://localhost:5000/api/chat/rooms')
+                fetch('http://localhost:5000/api/chat/rooms', {
+                    headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${storedData.token}`
+            },
+                })
                     .then((response) => response.json())
                     .then((data) => setChatrooms(data)) // Update the chatrooms state with the fetched data
                     .catch((error) => console.error('Error:', error));
