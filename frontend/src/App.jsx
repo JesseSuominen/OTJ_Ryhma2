@@ -1,5 +1,5 @@
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-
+import React, { useEffect, useState, useContext } from 'react';
 
 import './App.css'
 import Calendar from './pages/Calendar'
@@ -7,6 +7,7 @@ import Chat from './pages/Chat'
 import Home from './pages/Home'
 import RootLayout from './pages/RootLayout'
 import ChatRoom from './pages/ChatRoom'
+import { setTokenContext } from './contexts/setTokenContext'
 
 const router = createBrowserRouter([
   { path: '/',
@@ -22,9 +23,19 @@ const router = createBrowserRouter([
 
 
 function App() {
+  const [token, setToken] = useState(''); 
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    if (storedToken) {
+        setToken(storedToken);
+    }
+  }, []);
 
   return (
-    <RouterProvider router={router}/>
+    <setTokenContext.Provider value={{token, setToken}}>
+      <RouterProvider router={router}/>
+    </setTokenContext.Provider>
   )
 }
 
