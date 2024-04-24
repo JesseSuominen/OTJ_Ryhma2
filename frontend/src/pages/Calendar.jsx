@@ -5,17 +5,6 @@ import CircularProgressBar from '../components/CircularProgressBar';
 import ButtonAddEvent from '../components/ButtonWithPopup';
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wen", "Thu", "Fri", "Sat"];
-/*
-interface Event {
-    date: Date;
-    title: String;
-    description: String;
-}
-
-interface CalendarProps {
-    events: Event[];
-}
-*/
 
 const Calendar = () => {
 
@@ -60,7 +49,10 @@ const Calendar = () => {
         })}
 
         {Array.from({ length: startingDayIndex }).map((_, index) => {
-          return <div key={`empty- ${index}`}/>
+          return <div key={`empty- ${index}`} 
+          onMouseOver={() => setIsHovered(true)}
+          onMouseOut={() => setIsHovered(false)}
+          style={isHovered ? hoveredButtonStyle : buttonStyle}/>
         })}
 
         {daysInMonth.map((day, index) => {
