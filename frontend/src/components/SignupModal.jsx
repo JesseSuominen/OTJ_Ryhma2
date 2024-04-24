@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Modal, Box, Typography, TextField, Button } from '@mui/material';
 
+import { setTokenContext } from '../contexts/setTokenContext';
+
 const SignupModal = ({ open, handleClose, setToken }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
