@@ -1,0 +1,27 @@
+.month_and_year {
+    text-align: center;
+    padding: 2;
+}
+
+.grid_position {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.grid_element {
+    display: grid;
+    grid-template-columns: repeat(7, 100px);
+    /* Set the width of each column */
+    grid-auto-rows: 100px;
+    /* Set the height of each row */
+    gap: 10px;
+    /* Adjust the gap between items as needed */
+}
+
+.grid_element>div {
+    border: 1px solid #0e0808;
+    border-radius: 4px;
+    padding: 8px;
+    text-align: justify;
+}

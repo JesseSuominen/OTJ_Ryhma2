@@ -1,6 +1,7 @@
 import React from 'react';
 
 const EventPopup = ({ onClose }) => {
+  
   const handleSubmit = (event) => {
     event.preventDefault();
     const eventData = {
@@ -11,6 +12,10 @@ const EventPopup = ({ onClose }) => {
     };
     // Tallentaa eventin tiedot
     onClose(eventData);
+  };
+
+  const handleCancel = () => {
+    onClose();
   };
 
   return (
@@ -26,6 +31,7 @@ const EventPopup = ({ onClose }) => {
         <label htmlFor="endDate">End Date:</label><br />
         <input type="date" id="endDate" name="endDate" required /><br /><br />
         <button type="submit">Submit Event</button>
+        <button type="button" onClick={handleCancel} style={{ marginLeft: '10px' }}>Cancel</button>
       </form>
     </div>
   );
