@@ -1,11 +1,12 @@
 import React from 'react';
 import { Box, TextField, Button } from '@mui/material';
 
-const ChatInput = ({ chatroomId, message, setMessage }) => {
+const ChatInput = ({ chatroomId, message, setMessage, sendMessage }) => {
   const handleSendMessage = (e) => {
     // Handle the logic for sending a message here
     e.preventDefault()
     console.log(`Send message: ${message} to chatroom: ${chatroomId}`);
+    sendMessage()
     setMessage(''); // Clear the message input field after sending
   };
 
@@ -36,6 +37,7 @@ const ChatInput = ({ chatroomId, message, setMessage }) => {
         variant="contained"
         color="primary"
         type="submit"
+        
       >
         Send
       </Button>
