@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Box, Typography, Button, Grid } from '@mui/material';
 import { setTokenContext } from '../contexts/setTokenContext';
 import LoginModal from '../components/LoginModal';
@@ -10,9 +10,11 @@ const NavigationBar = () => {
   const [signupOpen, setSignupOpen] = useState(false);
   const { token, setToken } = useContext(setTokenContext);
 
+  const navigate = useNavigate();
   const handleLogout = () => {
     setToken(''); // Clear the token from the state
     localStorage.removeItem('token'); // Remove the token from localStorage
+    navigate('/')
   };
 
   return (
