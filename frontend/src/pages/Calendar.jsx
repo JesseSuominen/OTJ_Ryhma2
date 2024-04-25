@@ -10,6 +10,7 @@ const Calendar = ({ eventData }) => {
   const { token, setToken } = useContext(setTokenContext);
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem('token'));
+    console.log(storedData);
     if (storedData) {
       const userID = storedData.user_id;
       console.log(storedData.token);

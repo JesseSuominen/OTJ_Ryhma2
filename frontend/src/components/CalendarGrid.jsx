@@ -22,6 +22,7 @@ const CalendarGrid = ({ eventData }) => {
   ];
 
   const events = eventData || mockEventData;
+  console.log(eventData);
 
   const WEEKDAYS = ["Sun", "Mon", "Tue", "Wen", "Thu", "Fri", "Sat"];
   const currentDate = new Date();

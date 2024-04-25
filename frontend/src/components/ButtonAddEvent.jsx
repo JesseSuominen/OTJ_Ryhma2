@@ -10,12 +10,34 @@ const ButtonAddEvent = () => {
     setShowPopup(true);
   };
 
-  const handleClose = (data) => {
+  const handleClose = async (data) => {
     setShowPopup(false);
     if (data) {
-      // Oletettavasti tällä pitäis saada data DB:lle
-      setEventData(data);
-      console.log('Event data:', data);
+      console.log(data);
+      try {
+        const storedData = JSON.parse(localStorage.getItem('token'));
+        const userId = storedData.user_id;
+        
+        const response = await fetch(`http://localhost:5000/api/calendar/event?id=${userId}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${storedData.token}`
+          },
+          body: 
+          {
+            "name": ""
+          },
+        });
+  
+        if (!response.ok) {
+          console.error('Failed to submit event:', response.statusText);
+        } else {
+          console.log('Event submitted successfully');
+        }
+      } catch (error) {
+        console.error('Error submitting event:', error.message);
+      }
     }
   };
 
