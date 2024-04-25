@@ -19,6 +19,12 @@ const ButtonAddEvent = () => {
     }
   };
 
+  const containerStyle = {
+    width: '200px', 
+    height: '50px',
+    padding: '50px',
+  };
+
   const buttonStyle = {
     backgroundColor: 'blue',
     color: 'white',
@@ -38,7 +44,7 @@ const ButtonAddEvent = () => {
   };
 
   return (
-    <div>
+    <div style={containerStyle}>
       <button
         onClick={openPopup}
         onMouseOver={() => setIsHovered(true)}

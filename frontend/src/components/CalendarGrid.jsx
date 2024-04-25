@@ -1,6 +1,27 @@
 import { eachDayOfInterval, endOfMonth, format, getDay, isToday, startOfMonth } from "date-fns";
 import { useState } from "react";
-const CalendarGrid = () => {
+import './CalendarGrid.css';
+
+const CalendarGrid = ({ eventData }) => {
+
+  const [dataBaseEvents, setDataBaseEvents] = useState(false);
+  
+  const mockEventData = [
+    {
+      eventTitle: "Sample Event 1",
+      eventDescription: "This is a sample event description.",
+      startDate: "2024-04-30",
+      endDate: "2024-04-30",
+    },
+    {
+      eventTitle: "Sample Event 2",
+      eventDescription: "Another sample event.",
+      startDate: "2024-04-29",
+      endDate: "2024-04-29",
+    },
+  ];
+
+  const events = eventData || mockEventData;
 
   const WEEKDAYS = ["Sun", "Mon", "Tue", "Wen", "Thu", "Fri", "Sat"];
   const currentDate = new Date();
@@ -29,26 +50,52 @@ const CalendarGrid = () => {
     cursor: 'pointer'
   };
 
-  return (
-    <div>
-      <h2 className="month_and_year">{format(currentDate, "MMMM yyyy")}</h2>
+  // Map events to their corresponding dates
+  const eventsByDate = {};
+  events.forEach(event => {
+    const startDate = new Date(event.startDate);
+    const endDate = new Date(event.endDate);
+    const eventDates = eachDayOfInterval({ start: startDate, end: endDate });
+    eventDates.forEach(date => {
+      const formattedDate = format(date, "yyyy-MM-dd");
+      if (!eventsByDate[formattedDate]) {
+        eventsByDate[formattedDate] = [];
+      }
+      eventsByDate[formattedDate].push(event);
+    });
+  });
 
-      <div className="grid_weekdays">
+  return (
+    <div className="grid_position">
+      <h2 className="month_and_year">{format(currentDate, "MMMM yyyy")}</h2>
+      <div className="grid_element">
         {WEEKDAYS.map((day) => {
           return <div key={day}>{day}</div>;
         })}
 
         {Array.from({ length: startingDayIndex }).map((_, index) => {
-          return <div key={`empty- ${index}`}
+          return <div key={`empty-${index}`}
             onMouseOver={() => setIsHovered(true)}
             onMouseOut={() => setIsHovered(false)}
             style={isHovered ? hoveredBoxStyle : boxStyle} />
         })}
 
         {daysInMonth.map((day, index) => {
-          return <div key={index}>
-            {format(day, "d")}
-          </div>;
+          const formattedDay = format(day, "yyyy-MM-dd");
+          const eventsForDay = eventsByDate[formattedDay] || [];
+
+          return (
+            <div key={index} style={{ position: "relative" }}>
+              {format(day, "d")}
+              {eventsForDay.map((event, eventIndex) => {
+                return (
+                  <div key={`event-${index}-${eventIndex}`} className="event-indicator">
+                    {event.eventTitle}
+                  </div>
+                );
+              })}
+            </div>
+          );
         })}
       </div>
     </div>
