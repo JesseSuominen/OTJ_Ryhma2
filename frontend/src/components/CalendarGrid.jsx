@@ -5,23 +5,9 @@ import './CalendarGrid.css';
 const CalendarGrid = ({ eventData }) => {
 
   const [dataBaseEvents, setDataBaseEvents] = useState(false);
-  
-  const mockEventData = [
-    {
-      eventTitle: "Sample Event 1",
-      eventDescription: "This is a sample event description.",
-      startDate: "2024-04-30",
-      endDate: "2024-04-30",
-    },
-    {
-      eventTitle: "Sample Event 2",
-      eventDescription: "Another sample event.",
-      startDate: "2024-04-29",
-      endDate: "2024-04-29",
-    },
-  ];
 
-  const events = eventData || mockEventData;
+  const events = eventData;
+  console.log(events);
 
   const WEEKDAYS = ["Sun", "Mon", "Tue", "Wen", "Thu", "Fri", "Sat"];
   const currentDate = new Date();
@@ -53,8 +39,8 @@ const CalendarGrid = ({ eventData }) => {
   // Map events to their corresponding dates
   const eventsByDate = {};
   events.forEach(event => {
-    const startDate = new Date(event.startDate);
-    const endDate = new Date(event.endDate);
+    const startDate = new Date(event.start_date);
+    const endDate = new Date(event.end_date);
     const eventDates = eachDayOfInterval({ start: startDate, end: endDate });
     eventDates.forEach(date => {
       const formattedDate = format(date, "yyyy-MM-dd");
@@ -90,7 +76,7 @@ const CalendarGrid = ({ eventData }) => {
               {eventsForDay.map((event, eventIndex) => {
                 return (
                   <div key={`event-${index}-${eventIndex}`} className="event-indicator">
-                    {event.eventTitle}
+                    {event.name}
                   </div>
                 );
               })}
