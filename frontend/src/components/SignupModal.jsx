@@ -4,11 +4,17 @@ import { Modal, Box, Typography, TextField, Button } from '@mui/material';
 import { setTokenContext } from '../contexts/setTokenContext';
 import ErrorPopup from './ErrorPopup';
 
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+
+
 const SignupModal = ({ open, handleClose, setToken }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errorOpen, setErrorOpen] = useState(false);
 
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const handleSubmit = (event) => {
         event.preventDefault();
 
@@ -37,7 +43,7 @@ const SignupModal = ({ open, handleClose, setToken }) => {
 
     return (
         <>
-            <Modal open={open} onClose={handleClose}>
+            <Modal open={open} onClose={handleClose} fullScreen={fullScreen}>
                 <Box
                     component="form"
                     onSubmit={handleSubmit}
@@ -46,7 +52,8 @@ const SignupModal = ({ open, handleClose, setToken }) => {
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
-                        width: 400,
+                        width: fullScreen ? '75%' : 400, // Adjust the width based on the screen size
+                        height: fullScreen ? '50%' : 'auto',
                         bgcolor: 'background.paper',
                         border: '2px solid #000',
                         boxShadow: 24,
