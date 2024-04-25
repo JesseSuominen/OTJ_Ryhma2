@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef  } from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Typography } from '@mui/material';
 import ChatMessage from '../components/ChatMessage';
@@ -10,10 +10,40 @@ const ChatRoom = () => {
   const [message, setMessage] = useState(''); // Add a useState hook for the message
   const [messages, setMessages] = useState([]); // Add a useState hook for the messages
   const [socket, setSocket] = useState(null); // Add a useState hook for the socket
+  const [roomData, setRoomData] = useState(null); // Add a useState hook for the room data
+  const [isUserInteracting, setIsUserInteracting] = useState(false);
+
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
 
   useEffect(() => {
-    const newSocket = io('http://localhost:5000', { transports: ['websocket'] }); // Connect to the Socket.IO server
+    if (!isUserInteracting) {
+      scrollToBottom();
+  }
+  }, [messages]);
+
+  useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem('token'));
+
+    // Fetch room data when the component mounts
+    fetch(`http://localhost:5000/api/chat/room?id=${id}`, {
+      headers: {
+        'Authorization': `Bearer ${storedData.token}`
+      }
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setRoomData(data);
+      })
+      .catch((error) => {
+        console.error('Error fetching room data:', error);
+      });
+
+    const newSocket = io('http://localhost:5000', { transports: ['websocket'] }); // Connect to the Socket.IO server
+
     setSocket(newSocket);
 
     newSocket.emit('joinRoom', id);
@@ -28,21 +58,21 @@ const ChatRoom = () => {
     // Fetch historical messages when the component mounts
     fetch(`http://localhost:5000/api/chat/messages?id=${id}`, {
       headers: {
-          'Authorization': `Bearer ${storedData.token}`
+        'Authorization': `Bearer ${storedData.token}`
       }
     })
-    .then((response) => response.json())
-    .then((data) => {
+      .then((response) => response.json())
+      .then((data) => {
         const storedData = JSON.parse(localStorage.getItem('token'));
         const fetchedMessages = data.map((message) => ({
-            ...message,
-            isOwnMessage: message.user_id == storedData.user_id,
+          ...message,
+          isOwnMessage: message.user_id == storedData.user_id,
         }));
         setMessages(fetchedMessages);
-    })
-    .catch((error) => {
+      })
+      .catch((error) => {
         console.error('Error fetching messages:', error);
-    });
+      });
 
     // Clean up the effect
     return () => newSocket.disconnect();
@@ -67,15 +97,43 @@ const ChatRoom = () => {
 
 
   return (
-    <Box width="100%">
-      <Typography variant="h4" component="h1">Chatroom {id}</Typography>
-      <Box width="100%">
+    <Box display="flex" flexDirection="column" maxWidth="100%" height="90vh" maxHeight="90vh" paddingLeft={16} paddingRight={16}>
+      <Box display="flex" justifyContent="center" marginTop={4} marginBottom={4}>
+        {roomData && <Typography variant="h4" component="h1">{roomData.name}</Typography>}
+      </Box>
+      <Box 
+        width="100%"  
+        overflow="auto" 
+        onMouseEnter={() => setIsUserInteracting(true)}
+        onMouseLeave={() => setIsUserInteracting(false)}
+        onScroll={(e) => {
+            const { scrollTop, clientHeight, scrollHeight } = e.currentTarget;
+            setIsUserInteracting(scrollTop + clientHeight < scrollHeight);
+        }}
+      >
         {messages.map((message) => (
-          <Box key={message.id} display="flex" flexDirection="row" alignItems="center" width="100%">
-            <Typography variant="subtitle1">{message.username}</Typography>
-            <ChatMessage message={message.text} isOwnMessage={message.isOwnMessage} style={{ flexGrow: 1 }}/>
+          <Box key={message.id} display="flex" flexDirection="row" alignItems="center" width="100%" sx={{
+            justifyContent:  message.isOwnMessage ? 'end' : 'flex-start'
+          }}>
+             {message.isOwnMessage && <ChatMessage message={message.text} isOwnMessage={message.isOwnMessage} style={{ flexGrow: 1 }}/>}
+            <Box
+              sx={{
+                maxWidth: '100%',
+                backgroundColor: message.isOwnMessage ? 'primary.main' : 'grey.300',
+                color: message.isOwnMessage ? 'white' : 'black',
+                borderRadius: 2,
+                p: 1,
+                mb: 1,
+                margin: 1
+              }}
+            >
+              <Typography variant="body1">{message.username}</Typography>
+            </Box>
+
+            {!message.isOwnMessage && <ChatMessage message={message.text} isOwnMessage={message.isOwnMessage} style={{ flexGrow: 1 }}/>}
           </Box>
         ))}
+        <div ref={messagesEndRef} />
       </Box>
       <ChatInput chatroomId={id} message={message} setMessage={setMessage} sendMessage={sendMessage} /> {/* Pass the chatroom ID, message, and setMessage to the ChatInput component */}
     </Box>

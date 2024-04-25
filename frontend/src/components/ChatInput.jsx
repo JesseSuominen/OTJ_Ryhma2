@@ -19,11 +19,12 @@ const ChatInput = ({ chatroomId, message, setMessage, sendMessage }) => {
     <Box
       component="form"
       onSubmit={e => handleSendMessage(e)}
+      mt="auto"
       sx={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        mt: 1,
+        // width: '100%', // You might also need to set the width to 100%
       }}
     >
       <TextField
@@ -32,12 +33,15 @@ const ChatInput = ({ chatroomId, message, setMessage, sendMessage }) => {
         placeholder="Type a message"
         value={message}
         onChange={handleInputChange}
+        sx={{ margin: 1 }}
+        size="small"
       />
       <Button
+        sx={{ height: 0.7 }}
         variant="contained"
         color="primary"
         type="submit"
-        
+        size="small"
       >
         Send
       </Button>
