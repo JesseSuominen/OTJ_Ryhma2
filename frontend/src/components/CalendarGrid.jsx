@@ -36,6 +36,24 @@ const CalendarGrid = ({ eventData }) => {
     setSelectedDay(day);
   };
 
+  const handleRemoveEvent = (eventToRemove) => {
+    fetch(`http://localhost:5000/api/calendar/event/delete/${eventToRemove.id}`, {
+      method: 'DELETE',
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to delete event');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log(data.message);
+    })
+    .catch(error => {
+      console.error('Error deleting event:', error.message);
+    });
+  };
+
   const eventsByDate = {};
   events.forEach(event => {
     const startDate = new Date(event.start_date);
@@ -93,7 +111,10 @@ const CalendarGrid = ({ eventData }) => {
               <h4>Events:</h4>
               <ul>
                 {eventsByDate[format(selectedDay, "yyyy-MM-dd")].map((event, index) => (
-                  <li key={index}>{event.name}</li>
+                  <li key={index}>
+                    {event.name}
+                    <button onClick={() => handleRemoveEvent(event)}>Remove</button>
+                  </li>
                 ))}
               </ul>
             </div>
