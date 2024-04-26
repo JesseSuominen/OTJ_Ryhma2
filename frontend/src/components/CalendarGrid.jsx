@@ -3,9 +3,7 @@ import { useState } from "react";
 import './CalendarGrid.css';
 
 const CalendarGrid = ({ eventData }) => {
-
   const events = eventData;
-  console.log(events);
 
   const WEEKDAYS = ["Sun", "Mon", "Tue", "Wen", "Thu", "Fri", "Sat"];
   const currentDate = new Date();
@@ -13,7 +11,7 @@ const CalendarGrid = ({ eventData }) => {
   const lastDayOfMonth = endOfMonth(currentDate);
   const startingDayIndex = getDay(firstDayOfMonth);
 
-  const [isHovered, setIsHovered] = useState(false);
+  const [selectedDay, setSelectedDay] = useState(null);
 
   const daysInMonth = eachDayOfInterval({
     start: firstDayOfMonth,
@@ -34,7 +32,10 @@ const CalendarGrid = ({ eventData }) => {
     cursor: 'pointer'
   };
 
-  // Map events to their corresponding dates
+  const handleDayClick = (day) => {
+    setSelectedDay(day);
+  };
+
   const eventsByDate = {};
   events.forEach(event => {
     const startDate = new Date(event.start_date);
@@ -58,10 +59,7 @@ const CalendarGrid = ({ eventData }) => {
         })}
 
         {Array.from({ length: startingDayIndex }).map((_, index) => {
-          return <div key={`empty-${index}`}
-            onMouseOver={() => setIsHovered(true)}
-            onMouseOut={() => setIsHovered(false)}
-            style={isHovered ? hoveredBoxStyle : boxStyle} />
+          return <div key={`empty-${index}`} style={boxStyle} />
         })}
 
         {daysInMonth.map((day, index) => {
@@ -70,7 +68,11 @@ const CalendarGrid = ({ eventData }) => {
 
           return (
             <div key={index} style={{ position: "relative" }}>
-              {format(day, "d")}
+              <div 
+                onClick={() => handleDayClick(day)} 
+                style={selectedDay === day ? hoveredBoxStyle : boxStyle}>
+                {format(day, "d")}
+              </div>
               {eventsForDay.map((event, eventIndex) => {
                 return (
                   <div key={`event-${index}-${eventIndex}`} className="event-indicator">
@@ -82,6 +84,22 @@ const CalendarGrid = ({ eventData }) => {
           );
         })}
       </div>
+      {selectedDay && (
+        <div className="information-panel">
+          <h3>{format(selectedDay, "MMMM d, yyyy")}</h3>
+          <p>{format(selectedDay, "EEEE")}</p>
+          {eventsByDate[format(selectedDay, "yyyy-MM-dd")] &&
+            <div>
+              <h4>Events:</h4>
+              <ul>
+                {eventsByDate[format(selectedDay, "yyyy-MM-dd")].map((event, index) => (
+                  <li key={index}>{event.name}</li>
+                ))}
+              </ul>
+            </div>
+          }
+        </div>
+      )}
     </div>
   )
 }
