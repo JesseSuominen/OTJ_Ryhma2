@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import JoinChatRoom from '../components/JoinChatRoom';
 import AddChatRoom from '../components/AddChatRoom';
 import { SetChatroomsContext } from '../contexts/SetChatroomsContext';
@@ -26,16 +26,18 @@ const Chat = () => {
     }, [token]); // Add an empty dependency array so the effect only runs once
     return (
         <SetChatroomsContext.Provider value={setChatrooms}> {/* Provide the setChatrooms function */}
-            <div>
+            <Box maxHeight="90vh" height="90vh">
                 {chatrooms.length > 0 ? <AddChatRoom /> : <p></p>}
-                {chatrooms.length > 0 ? (
-                    chatrooms.map((chatroom) => (
-                        <JoinChatRoom key={chatroom.id} chatroom={chatroom} />
-                    ))
-                ) : (
-                    <p>No chatrooms available.</p>
-                )}
-            </div>
+                <Box display="flex" flexWrap="wrap" overflow="auto" maxHeight="80vh" >
+                    {chatrooms.length > 0 ? (
+                        chatrooms.map((chatroom) => (
+                            <JoinChatRoom key={chatroom.id} chatroom={chatroom} />
+                        ))
+                    ) : (
+                        <p>No chatrooms available.</p>
+                    )}
+                </Box>
+            </Box>
         </SetChatroomsContext.Provider>
     );
 };

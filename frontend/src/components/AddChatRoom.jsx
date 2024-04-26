@@ -83,7 +83,7 @@ const AddChatRoomModal = ({ open, handleClose }) => {
           variant="contained"
           color="primary"
           type="submit"
-          sx={{ mt: 2 }}
+          sx={{ mt: 2, }}
         >
           Add
         </Button>
@@ -106,9 +106,11 @@ const AddChatRoom = () => {
   };
 
   return (
-    <Box display="flex" justifyContent="space-between" alignItems="center">
-      <Typography variant="h3" component="h1">Chatrooms</Typography>
-      <Button variant="contained" color="primary" onClick={handleAddChatRoom}>
+    <Box display="flex" justifyContent="space-between" marginTop={4} marginBottom={4} alignItems="center" width="100%">
+      <Box display="flex" justifyContent="center" flexGrow={1}>
+        <Typography variant="h3" component="h1">Chatrooms</Typography>
+      </Box>
+      <Button variant="contained" color="primary" onClick={handleAddChatRoom} sx={{marginRight: 2}}>
         Add Chatroom
       </Button>
       <AddChatRoomModal open={open} handleClose={handleClose} />
