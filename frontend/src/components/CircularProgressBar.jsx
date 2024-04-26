@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { setTokenContext } from '../contexts/setTokenContext';
-import { eachDayOfInterval, endOfMonth, format, getDay, isToday, startOfMonth } from "date-fns";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import './CircularProgressBar.css';
@@ -12,19 +11,21 @@ const CircularProgressBar = () => {
   const [submittedMinutes, setSubmittedMinutes] = useState(0);
   const [showInputFields, setShowInputFields] = useState(false);
   const [progressLabel, setProgressLabel] = useState("Current Monthly Progress");
+  const [errorMessage, setErrorMessage] = useState('');
+  const [progressText, setProgressText] = useState('0%');
 
   const currentDate = new Date();
-   // Adding 1 because getMonth() returns 0--11
   const currentMonth = (currentDate.getMonth() + 1).toString();
   const currentYear = (currentDate.getFullYear()).toString();
 
-  // Calculate total progress percentage towards the goal (30 hours)
-  const totalMinutes = (hours + submittedHours) * 60 + (minutes + submittedMinutes);
   const goalMinutes = 30 * 60;
-  const progress = goalMinutes !== 0 ? (totalMinutes / goalMinutes) * 100 : 0;
+  const [progress, setProgress] = useState(0);
 
-  const handleAddProgressClick = () => {
-    setShowInputFields(true);
+  const calculateProgress = () => {
+    const total = (hours + submittedHours) * 60 + (minutes + submittedMinutes);
+    const newProgress = goalMinutes !== 0 ? (total / goalMinutes) * 100 : 0;
+    setProgress(newProgress);
+    setProgressText(`${Math.round(newProgress)}%`);
   };
 
   const handleAddProgress = () => {
@@ -33,42 +34,72 @@ const CircularProgressBar = () => {
     setSubmittedHours(0);
     setSubmittedMinutes(0);
     setShowInputFields(false);
+
+    calculateProgress();
+
+    const currentDate = new Date().toISOString().split('T')[0];
+
+    const storedData = JSON.parse(localStorage.getItem('token'));
+    if (storedData) {
+      const userID = storedData.user_id.toString();
+      const requestBody = JSON.stringify({
+        amount: submittedHours + submittedMinutes / 60,
+        name: "Work",
+        date: currentDate
+      });
+
+      fetch(`http://localhost:5000/api/calendar/hour?id=${userID}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${storedData.token}`,
+        },
+        body: requestBody,
+      })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Failed to add progress');
+        }
+        setErrorMessage('');
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        setErrorMessage('Please enter hours and/or minutes to be added.');
+      });
+    }
   };
 
-  const { token, setToken } = useContext(setTokenContext);
-  const [dataFetched, setDataFetched] = useState(false);
-
-  // useEffect hook...
   useEffect(() => {
-    // Fetch progress data only if it hasn't been fetched already
-    if (!dataFetched) {
-      const storedData = JSON.parse(localStorage.getItem('token'));
-      if (storedData) {
-        const userID = storedData.user_id.toString();
-        fetch(`http://localhost:5000/api/calendar/monthlyhours?id=${userID}&month=${currentMonth}&year=${currentYear}`, {
-          headers: {
-            'Authorization': `Bearer ${storedData.token}`,
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data && data.length > 0) {
-              const totalAmount = data[0].total_amount;
-              // total_amount is a decimal number in hours
-              setMinutes(Math.floor(minutes + totalAmount * 60));
-            }
-          })
-          .catch((error) => console.error('Error:', error));
-      }
-    }
-  }, [dataFetched, token, currentMonth, currentYear]);
-
-  useEffect(() => {
-    // Update the progress label when progress reaches or exceeds 100%
     if (progress >= 100 && progressLabel !== "GOAL REACHED") {
       setProgressLabel("GOAL REACHED");
     }
   }, [progress, progressLabel]);
+
+  const { token } = useContext(setTokenContext);
+
+  useEffect(() => {
+    const storedData = JSON.parse(localStorage.getItem('token'));
+    if (storedData) {
+      const userID = storedData.user_id.toString();
+      fetch(`http://localhost:5000/api/calendar/monthlyhours?id=${userID}&month=${currentMonth}&year=${currentYear}`, {
+        headers: {
+          'Authorization': `Bearer ${storedData.token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data && data.length > 0) {
+            const totalAmount = data[0].total_amount;
+            const totalMinutes = Math.floor(totalAmount * 60);
+            setMinutes(totalMinutes);
+            const newProgress = goalMinutes !== 0 ? (totalMinutes / goalMinutes) * 100 : 0;
+            setProgress(newProgress);
+            setProgressText(`${Math.round(newProgress)}%`);
+          }
+        })
+        .catch((error) => console.error('Error:', error));
+    }
+  }, [goalMinutes, token, currentMonth, currentYear]);
 
   return (
     <div className="progress-container">
@@ -76,7 +107,7 @@ const CircularProgressBar = () => {
       <div className="progress-bar-container">
         <CircularProgressbar
           value={progress}
-          text={`${Math.round(progress)}%`}
+          text={progressText}
           styles={buildStyles({
             textSize: '16px',
             pathColor: `rgba(62, 152, 199, ${progress / 100})`,
@@ -88,14 +119,14 @@ const CircularProgressBar = () => {
           <div className="input-fields">
             <input
               type="number"
-              value={submittedHours}
+              value={submittedHours || ''}
               onChange={(e) => setSubmittedHours(parseInt(e.target.value, 10))}
               style={{ marginRight: '5px' }}
             />
             Hours
             <input
               type="number"
-              value={submittedMinutes}
+              value={submittedMinutes || ''}
               onChange={(e) => setSubmittedMinutes(parseInt(e.target.value, 10))}
               style={{ marginLeft: '10px', marginRight: '5px' }}
             />
@@ -107,10 +138,13 @@ const CircularProgressBar = () => {
           </div>
         )}
         {!showInputFields && (
-          <button onClick={handleAddProgressClick} style={{ marginTop: '10px' }}>
+          <button onClick={() => setShowInputFields(true)} style={{ marginTop: '10px' }}>
             Add Progress
           </button>
         )}
+        <br />
+            {/* Display error message */}
+            {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
       </div>
     </div>
   );
