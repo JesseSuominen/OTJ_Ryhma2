@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import EventPopup from './EventPopup';
+import EventDataFetcher from './EventDataFetcher'; // Import EventDataFetcher component
 
 const ButtonAddEvent = () => {
   const [showPopup, setShowPopup] = useState(false);
-  const [eventData, setEventData] = useState(null);
   const [isHovered, setIsHovered] = useState(false);
 
   const openPopup = () => {
@@ -82,6 +82,7 @@ const ButtonAddEvent = () => {
         Add Event
       </button>
       {showPopup && <EventPopup onClose={handleClose} />}
+      <EventDataFetcher setEventData={() => {}} /> {/* Render EventDataFetcher component */}
     </div>
   );
 };

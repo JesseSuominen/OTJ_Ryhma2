@@ -1,27 +1,13 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import CircularProgressBar from '../components/CircularProgressBar';
 import ButtonAddEvent from '../components/ButtonAddEvent';
 import CalendarGrid from '../components/CalendarGrid';
+import EventDataFetcher from '../components/EventDataFetcher';
 import { setTokenContext } from '../contexts/setTokenContext';
 
 const Calendar = () => {
-
-  const [eventDataDB, setEventDataDB] = useState([]);
-  const { token, setToken } = useContext(setTokenContext);
-  useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem('token'));
-    if (storedData) {
-      const userID = storedData.user_id.toString();
-      fetch(`http://localhost:5000/api/calendar/events?id=${userID}`, {
-        headers: {
-          'Authorization': `Bearer ${storedData.token}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => setEventDataDB(data))
-        .catch((error) => console.error('Error:', error));
-    } else setEventDataDB([])
-  }, [token]);
+  const [eventData, setEventData] = useState([]);
+  const { token } = useContext(setTokenContext);
 
   const ShowContent = () => {
     if (token)
@@ -29,7 +15,7 @@ const Calendar = () => {
         <div>
           <CircularProgressBar />
           <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-            <CalendarGrid eventData={eventDataDB} />
+            <CalendarGrid eventData={eventData} />
             <ButtonAddEvent />
           </div>
         </div>
@@ -38,7 +24,10 @@ const Calendar = () => {
   }
 
   return (
-    <ShowContent />
+    <>
+      <EventDataFetcher setEventData={setEventData} token={token} />
+      <ShowContent />
+    </>
   )
 }
 
