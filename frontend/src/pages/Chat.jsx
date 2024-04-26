@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import JoinChatRoom from '../components/JoinChatRoom';
 import AddChatRoom from '../components/AddChatRoom';
 import { SetChatroomsContext } from '../contexts/SetChatroomsContext';
@@ -7,7 +7,7 @@ import { setTokenContext } from '../contexts/setTokenContext';
 
 const Chat = () => {
     const [chatrooms, setChatrooms] = useState([]); // Add a useState hook for the chatrooms
-    const { token, setToken } = useContext(setTokenContext); // Get the token from the setTokenContext
+    const { token } = useContext(setTokenContext); // Get the token from the setTokenContext
     useEffect(() => {
         const storedData = JSON.parse(localStorage.getItem('token'));
         if (storedData) {

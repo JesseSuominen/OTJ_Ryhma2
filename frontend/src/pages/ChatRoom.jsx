@@ -23,7 +23,7 @@ const ChatRoom = () => {
     if (!isUserInteracting) {
       scrollToBottom();
   }
-  }, [messages]);
+  }, [messages, isUserInteracting]);
 
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem('token'));
@@ -49,8 +49,8 @@ const ChatRoom = () => {
     newSocket.emit('joinRoom', id);
     newSocket.on('message', (message) => {
 
-      message.isOwnMessage = message.user_id == storedData.user_id;
-      if (message.chatroom_id == id) {
+      message.isOwnMessage = message.user_id === storedData.user_id;
+      if (message.chatroom_id === id) {
         setMessages((messages) => [...messages, message]);
       }
     });
@@ -66,7 +66,7 @@ const ChatRoom = () => {
         const storedData = JSON.parse(localStorage.getItem('token'));
         const fetchedMessages = data.map((message) => ({
           ...message,
-          isOwnMessage: message.user_id == storedData.user_id,
+          isOwnMessage: message.user_id === storedData.user_id,
         }));
         setMessages(fetchedMessages);
       })
@@ -76,7 +76,7 @@ const ChatRoom = () => {
 
     // Clean up the effect
     return () => newSocket.disconnect();
-  }, []);
+  }, [id]);
 
   const sendMessage = () => {
     const storedData = JSON.parse(localStorage.getItem('token'));
@@ -101,9 +101,9 @@ const ChatRoom = () => {
       <Box display="flex" justifyContent="center" marginTop={4} marginBottom={4}>
         {roomData && <Typography variant="h4" component="h1">{roomData.name}</Typography>}
       </Box>
-      <Box 
-        width="100%"  
-        overflow="auto" 
+      <Box
+        width="100%"
+        overflow="auto"
         onMouseEnter={() => setIsUserInteracting(true)}
         onMouseLeave={() => setIsUserInteracting(false)}
         onScroll={(e) => {

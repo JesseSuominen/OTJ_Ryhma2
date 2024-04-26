@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Typography, Card } from '@mui/material';
-{/* <Box key={message.id} display="flex" flexDirection="row" alignItems="center" width="100%" sx={{
+/* <Box key={message.id} display="flex" flexDirection="row" alignItems="center" width="100%" sx={{
             justifyContent:  message.isOwnMessage ? 'end' : 'flex-start'
           }}>
              {message.isOwnMessage && <ChatMessage message={message.text} isOwnMessage={message.isOwnMessage} style={{ flexGrow: 1 }}/>}
@@ -19,7 +19,7 @@ import { Box, Typography, Card } from '@mui/material';
             </Box>
 
             {!message.isOwnMessage && <ChatMessage message={message.text} isOwnMessage={message.isOwnMessage} style={{ flexGrow: 1 }}/>}
-          </Box> */}
+          </Box> */
 const ChatMessage = ({ message, isOwnMessage }) => {
   return (
     <Card sx={{ backgroundColor: '#f5f5f5', margin: 2 }}>
