@@ -93,6 +93,42 @@ calendarRouter.get('/hours', (req, res) => {
   });
 });
 
+// Returns amount of workhours of a user for given month
+// curl --silent --include "http://localhost:5000/api/calendar/monthlyhours?id=1&month=4&year=2024"
+calendarRouter.get('/monthlyhours', (req, res) => {
+  const { id, month, year } = req.query;
+  if (!id) {
+    return res.status(BAD_REQUEST).json({ error: 'User id parameter is required' });
+  }
+  if (!month) {
+    return res.status(BAD_REQUEST).json({ error: 'Month parameter is required' });
+  }
+  if (!year) {
+    return res.status(BAD_REQUEST).json({ error: 'Year id parameter is required' });
+  }
+  // Pad single-digit months with leading zero
+  const paddedMonth = month.padStart(2, '0');
+  const SQL_SELECT = `
+    SELECT SUM(amount) AS total_amount
+    FROM workhour
+    WHERE user_id = ?
+      AND
+      strftime('%m', date) = ?
+      AND
+      strftime('%Y', date) = ?;
+    `;
+  db.all(SQL_SELECT, [id, paddedMonth, year], (err, rows) => {
+    if (err) {
+      console.error('Error fetching workhours:', err);
+      return res.status(INTERNAL_ERROR).json({ error: 'Something unexpected went wrong' });
+    }
+    if (!rows || rows.length === 0) {
+      return res.status(HTTP_STATUS_NOK).json({ error: 'User not found or no workhours available' });
+    }
+    res.status(HTTP_STATUS_OK).json(rows);
+  });
+});
+
 // Inserts workhours by user id
 // amount and date can't be null
 // curl -X POST http://localhost:5000/api/calendar/hour?id=1 -H "Content-Type: application/json" -d '{"amount" : 3, "name" : "working on tests", "date" : "2024-04-17"}'

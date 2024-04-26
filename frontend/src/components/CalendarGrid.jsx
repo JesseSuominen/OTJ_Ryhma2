@@ -7,7 +7,6 @@ const CalendarGrid = ({ eventData }) => {
   const [dataBaseEvents, setDataBaseEvents] = useState(false);
 
   const events = eventData;
-  console.log(events);
 
   const WEEKDAYS = ["Sun", "Mon", "Tue", "Wen", "Thu", "Fri", "Sat"];
   const currentDate = new Date();

@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { setTokenContext } from '../contexts/setTokenContext';
+import { eachDayOfInterval, endOfMonth, format, getDay, isToday, startOfMonth } from "date-fns";
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import './CircularProgressBar.css';
@@ -10,6 +12,11 @@ const CircularProgressBar = () => {
   const [submittedMinutes, setSubmittedMinutes] = useState(0);
   const [showInputFields, setShowInputFields] = useState(false);
   const [progressLabel, setProgressLabel] = useState("Current Monthly Progress");
+
+  const currentDate = new Date();
+   // Adding 1 because getMonth() returns 0--11
+  const currentMonth = (currentDate.getMonth() + 1).toString();
+  const currentYear = (currentDate.getFullYear()).toString();
 
   // Calculate total progress percentage towards the goal (30 hours)
   const totalMinutes = (hours + submittedHours) * 60 + (minutes + submittedMinutes);
@@ -28,9 +35,37 @@ const CircularProgressBar = () => {
     setShowInputFields(false);
   };
 
-  // Update the progress label when progress reaches 100%
+  const { token, setToken } = useContext(setTokenContext);
+  const [dataFetched, setDataFetched] = useState(false);
+
+  // useEffect hook...
   useEffect(() => {
-    if (progress === 100 && progressLabel !== "GOAL REACHED") {
+    // Fetch progress data only if it hasn't been fetched already
+    if (!dataFetched) {
+      const storedData = JSON.parse(localStorage.getItem('token'));
+      if (storedData) {
+        const userID = storedData.user_id.toString();
+        fetch(`http://localhost:5000/api/calendar/monthlyhours?id=${userID}&month=${currentMonth}&year=${currentYear}`, {
+          headers: {
+            'Authorization': `Bearer ${storedData.token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data && data.length > 0) {
+              const totalAmount = data[0].total_amount;
+              // total_amount is a decimal number in hours
+              setMinutes(Math.floor(minutes + totalAmount * 60));
+            }
+          })
+          .catch((error) => console.error('Error:', error));
+      }
+    }
+  }, [dataFetched, token, currentMonth, currentYear]);
+
+  useEffect(() => {
+    // Update the progress label when progress reaches or exceeds 100%
+    if (progress >= 100 && progressLabel !== "GOAL REACHED") {
       setProgressLabel("GOAL REACHED");
     }
   }, [progress, progressLabel]);
