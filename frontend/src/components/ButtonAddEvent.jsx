@@ -18,16 +18,21 @@ const ButtonAddEvent = () => {
         const storedData = JSON.parse(localStorage.getItem('token'));
         const userId = storedData.user_id;
         
+        // Transforming the data object to fit the server's criteria
+        const eventData = {
+          name: data.eventTitle,
+          description: data.eventDescription,
+          start_date: data.startDate,
+          end_date: data.endDate,
+        };
+        
         const response = await fetch(`http://localhost:5000/api/calendar/event?id=${userId}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${storedData.token}`
           },
-          body: 
-          {
-            "name": ""
-          },
+          body: JSON.stringify(eventData) // Sending transformed data
         });
   
         if (!response.ok) {
@@ -40,6 +45,7 @@ const ButtonAddEvent = () => {
       }
     }
   };
+  
 
   const containerStyle = {
     width: '200px', 

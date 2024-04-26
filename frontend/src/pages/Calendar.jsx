@@ -4,16 +4,14 @@ import ButtonAddEvent from '../components/ButtonAddEvent';
 import CalendarGrid from '../components/CalendarGrid';
 import { setTokenContext } from '../contexts/setTokenContext';
 
-const Calendar = ({ eventData }) => {
+const Calendar = () => {
 
   const [eventDataDB, setEventDataDB] = useState([]);
   const { token, setToken } = useContext(setTokenContext);
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem('token'));
-    console.log(storedData);
     if (storedData) {
-      const userID = storedData.user_id;
-      console.log(storedData.token);
+      const userID = storedData.user_id.toString();
       fetch(`http://localhost:5000/api/calendar/events?id=${userID}`, {
         headers: {
           'Authorization': `Bearer ${storedData.token}`,
@@ -31,7 +29,7 @@ const Calendar = ({ eventData }) => {
         <div>
           <CircularProgressBar />
           <div style={{ display: 'flex', justifyContent: 'space-evenly' }}>
-            <CalendarGrid eventData={eventData} />
+            <CalendarGrid eventData={eventDataDB} />
             <ButtonAddEvent />
           </div>
         </div>
