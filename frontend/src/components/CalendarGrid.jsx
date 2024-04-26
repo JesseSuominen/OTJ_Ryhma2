@@ -1,10 +1,8 @@
-import { eachDayOfInterval, endOfMonth, format, getDay, isToday, startOfMonth } from "date-fns";
+import { eachDayOfInterval, endOfMonth, format, getDay, startOfMonth } from "date-fns";
 import { useState } from "react";
 import './CalendarGrid.css';
 
 const CalendarGrid = ({ eventData }) => {
-
-  const [dataBaseEvents, setDataBaseEvents] = useState(false);
 
   const events = eventData;
   console.log(events);
