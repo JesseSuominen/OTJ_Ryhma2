@@ -28,6 +28,13 @@ const CircularProgressBar = () => {
     setProgressText(`${Math.round(newProgress)}%`);
   };
 
+  function handleKeyDown(event) {
+    // Check if the key pressed is "Enter"
+    if (event.key === 'Enter') {
+      handleAddProgress();
+    }
+  }
+
   const handleAddProgress = () => {
     setHours(hours + submittedHours);
     setMinutes(minutes + submittedMinutes);
@@ -121,6 +128,7 @@ const CircularProgressBar = () => {
               type="number"
               value={submittedHours || ''}
               onChange={(e) => setSubmittedHours(parseInt(e.target.value, 10))}
+              onKeyDown={handleKeyDown}
               style={{ marginRight: '5px' }}
             />
             Hours
@@ -128,11 +136,15 @@ const CircularProgressBar = () => {
               type="number"
               value={submittedMinutes || ''}
               onChange={(e) => setSubmittedMinutes(parseInt(e.target.value, 10))}
+              onKeyDown={handleKeyDown}
               style={{ marginLeft: '10px', marginRight: '5px' }}
             />
             Minutes
             <br />
-            <button onClick={handleAddProgress} style={{ marginTop: '10px' }}>
+            <button
+              onClick={handleAddProgress}
+              style={{ marginTop: '10px' }}
+            >
               Add Progress
             </button>
           </div>
