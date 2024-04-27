@@ -18,7 +18,6 @@ const ButtonAddEvent = () => {
         const storedData = JSON.parse(localStorage.getItem('token'));
         const userId = storedData.user_id;
         
-        // Transforming the data object to fit the server's criteria
         const eventData = {
           name: data.eventTitle,
           description: data.eventDescription,
@@ -32,7 +31,7 @@ const ButtonAddEvent = () => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${storedData.token}`
           },
-          body: JSON.stringify(eventData) // Sending transformed data
+          body: JSON.stringify(eventData)
         });
   
         if (!response.ok) {
@@ -82,7 +81,7 @@ const ButtonAddEvent = () => {
         Add Event
       </button>
       {showPopup && <EventPopup onClose={handleClose} />}
-      <EventDataFetcher setEventData={() => {}} /> {/* Render EventDataFetcher component */}
+      <EventDataFetcher setEventData={() => {}} />
     </div>
   );
 };

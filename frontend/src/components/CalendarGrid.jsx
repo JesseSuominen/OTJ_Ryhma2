@@ -12,6 +12,7 @@ const CalendarGrid = ({ eventData }) => {
   const startingDayIndex = getDay(firstDayOfMonth);
 
   const [selectedDay, setSelectedDay] = useState(null);
+  const [eventsState, setEvents] = useState(events);
 
   const daysInMonth = eachDayOfInterval({
     start: firstDayOfMonth,
@@ -36,26 +37,30 @@ const CalendarGrid = ({ eventData }) => {
     setSelectedDay(day);
   };
 
-  const handleRemoveEvent = (eventToRemove) => {
-    fetch(`http://localhost:5000/api/calendar/event/delete/${eventToRemove.id}`, {
-      method: 'DELETE',
-    })
-    .then(response => {
+  const handleRemoveEvent = async (eventToRemove) => {
+    try {
+      const storedData = JSON.parse(localStorage.getItem('token'));
+      const response = await fetch(`http://localhost:5000/api/calendar/event/delete/${eventToRemove.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${storedData.token}`
+        },
+      });
       if (!response.ok) {
         throw new Error('Failed to delete event');
       }
-      return response.json();
-    })
-    .then(data => {
+      // Update events state to remove the deleted event
+      setEvents(prevEvents => prevEvents.filter(event => event.id !== eventToRemove.id));
+      const data = await response.json();
       console.log(data.message);
-    })
-    .catch(error => {
+    } catch (error) {
       console.error('Error deleting event:', error.message);
-    });
+    }
   };
 
   const eventsByDate = {};
-  events.forEach(event => {
+  eventsState.forEach(event => {
     const startDate = new Date(event.start_date);
     const endDate = new Date(event.end_date);
     const eventDates = eachDayOfInterval({ start: startDate, end: endDate });
