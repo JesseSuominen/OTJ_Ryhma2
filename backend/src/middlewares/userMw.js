@@ -8,20 +8,21 @@ const userMw = (req, res, next) => {
 
     try {
         const token =req.headers.authorization.split(' ')[1];
-        console.log(req.headers.token)
+
 
         if(!token) {
             return res.status(401).json({message: "user not identified"});
         }
 
-        const decodedToken = jwt.verify(token, process.env.JWT_KEY);
+        const decodedToken = jwt.verify(token, process.env.JWT_KEY); // if the token is not valid, it will throw an error
         
-
-        req.userData = {userId: decodedToken.id};
+        req.userData = {user_id: decodedToken.user_id};
 
         next();
     } catch (err) {
+        
         return res.status(401).json({message: "user not identified"});
+
     }
 }
 

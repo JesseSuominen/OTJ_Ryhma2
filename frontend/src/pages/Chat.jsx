@@ -5,10 +5,17 @@ import AddChatRoom from '../components/AddChatRoom';
 import { SetChatroomsContext } from '../contexts/SetChatroomsContext';
 import { setTokenContext } from '../contexts/setTokenContext';
 
+
 const Chat = () => {
     const [chatrooms, setChatrooms] = useState([]); // Add a useState hook for the chatrooms
-    const { token } = useContext(setTokenContext); // Get the token from the setTokenContext
+    const { token, setToken } = useContext(setTokenContext); // Get the token from the setTokenContext
+    const storedData = JSON.parse(localStorage.getItem('token'));
     useEffect(() => {
+        
+        setToken(storedData);
+    }, []);
+    useEffect(() => {
+
         const storedData = JSON.parse(localStorage.getItem('token'));
         if (storedData) {
             console.log(storedData.token);
@@ -27,7 +34,7 @@ const Chat = () => {
     return (
         <SetChatroomsContext.Provider value={setChatrooms}> {/* Provide the setChatrooms function */}
             <Box maxHeight="90vh" height="90vh">
-                {chatrooms.length > 0 ? <AddChatRoom /> : <p></p>}
+                {storedData && storedData.token && <AddChatRoom />}
                 <Box display="flex" flexWrap="wrap" overflow="auto" maxHeight="80vh" >
                     {chatrooms.length > 0 ? (
                         chatrooms.map((chatroom) => (
