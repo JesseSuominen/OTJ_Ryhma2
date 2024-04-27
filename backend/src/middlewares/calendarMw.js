@@ -1,5 +1,5 @@
 const calendarMw = (req, res, next) => {
-    console.log('calendarMw')
+    console.log('calendarMw and calendarRoute used')
     next()
 }
 
