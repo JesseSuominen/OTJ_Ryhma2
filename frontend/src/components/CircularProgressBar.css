@@ -16,5 +16,6 @@
 .progress-bar-container {
   padding: 10px;
   min-width: 200px;
+  max-width: 300px;
   text-align: center;
 }

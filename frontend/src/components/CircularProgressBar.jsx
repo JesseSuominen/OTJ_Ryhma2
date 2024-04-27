@@ -129,7 +129,7 @@ const CircularProgressBar = () => {
               value={submittedHours || ''}
               onChange={(e) => setSubmittedHours(parseInt(e.target.value, 10))}
               onKeyDown={handleKeyDown}
-              style={{ marginRight: '5px' }}
+              style={{ maxWidth: '60px', marginLeft: '10px', marginRight: '10px', marginTop: '10px' }}
             />
             Hours
             <input
@@ -137,7 +137,7 @@ const CircularProgressBar = () => {
               value={submittedMinutes || ''}
               onChange={(e) => setSubmittedMinutes(parseInt(e.target.value, 10))}
               onKeyDown={handleKeyDown}
-              style={{ marginLeft: '10px', marginRight: '5px' }}
+              style={{ maxWidth: '60px', marginLeft: '10px', marginRight: '10px', marginTop: '10px' }}
             />
             Minutes
             <br />
