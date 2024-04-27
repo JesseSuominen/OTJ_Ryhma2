@@ -18,7 +18,7 @@ const CircularProgressBar = () => {
   const currentMonth = (currentDate.getMonth() + 1).toString();
   const currentYear = (currentDate.getFullYear()).toString();
 
-  const goalMinutes = 30 * 60;
+  const goalMinutes = 30 * 60 * 4;
   const [progress, setProgress] = useState(0);
 
   const calculateProgress = () => {

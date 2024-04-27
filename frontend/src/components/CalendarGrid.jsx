@@ -11,7 +11,7 @@ const CalendarGrid = ({ eventData }) => {
   const lastDayOfMonth = endOfMonth(currentDate);
   const startingDayIndex = getDay(firstDayOfMonth);
 
-  const [selectedDay, setSelectedDay] = useState(null);
+  const [selectedDay, setSelectedDay] = useState(currentDate);
   const [eventsState, setEvents] = useState(events);
 
   const daysInMonth = eachDayOfInterval({
@@ -50,7 +50,7 @@ const CalendarGrid = ({ eventData }) => {
       if (!response.ok) {
         throw new Error('Failed to delete event');
       }
-      
+
       setEvents(prevEvents => prevEvents.filter(event => event.id !== eventToRemove.id));
       const data = await response.json();
       console.log(data.message);
@@ -74,58 +74,60 @@ const CalendarGrid = ({ eventData }) => {
   });
 
   return (
-    <div className="grid_position">
-      <h2 className="month_and_year">{format(currentDate, "MMMM yyyy")}</h2>
-      <div className="grid_element">
-        {WEEKDAYS.map((day) => {
-          return <div key={day}>{day}</div>;
-        })}
-
-        {Array.from({ length: startingDayIndex }).map((_, index) => {
-          return <div key={`empty-${index}`} style={boxStyle} />
-        })}
-
-        {daysInMonth.map((day, index) => {
-          const formattedDay = format(day, "yyyy-MM-dd");
-          const eventsForDay = eventsByDate[formattedDay] || [];
-
-          return (
-            <div key={index} style={{ position: "relative" }}>
-              <div 
-                onClick={() => handleDayClick(day)} 
-                style={selectedDay === day ? hoveredBoxStyle : boxStyle}>
-                {format(day, "d")}
+    <div className="main-grid">
+      <div className="calendar-position">
+        <h2 className="month_and_year">{format(currentDate, "MMMM yyyy")}</h2>
+        {selectedDay && (
+          <div className="information-panel">
+            <h3>{format(selectedDay, "MMMM d, yyyy")}</h3>
+            <p>{format(selectedDay, "EEEE")}</p>
+            {eventsByDate[format(selectedDay, "yyyy-MM-dd")] &&
+              <div>
+                <h4 className="event-header">Events:</h4>
+                <ul className="event-list">
+                  {eventsByDate[format(selectedDay, "yyyy-MM-dd")].map((event, index) => (
+                    <li key={index}>
+                      {event.name}
+                      <button className="remove-button" onClick={() => handleRemoveEvent(event)}>Remove</button>
+                    </li>
+                  ))}
+                </ul>
               </div>
-              {eventsForDay.map((event, eventIndex) => {
-                return (
-                  <div key={`event-${index}-${eventIndex}`} className="event-indicator">
-                    {event.name}
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })}
-      </div>
-      {selectedDay && (
-        <div className="information-panel">
-          <h3>{format(selectedDay, "MMMM d, yyyy")}</h3>
-          <p>{format(selectedDay, "EEEE")}</p>
-          {eventsByDate[format(selectedDay, "yyyy-MM-dd")] &&
-            <div>
-              <h4>Events:</h4>
-              <ul>
-                {eventsByDate[format(selectedDay, "yyyy-MM-dd")].map((event, index) => (
-                  <li key={index}>
-                    {event.name}
-                    <button onClick={() => handleRemoveEvent(event)}>Remove</button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          }
+            }
+          </div>
+        )}
+        <div className="grid_element">
+          {WEEKDAYS.map((day) => {
+            return <div key={day}>{day}</div>;
+          })}
+
+          {Array.from({ length: startingDayIndex }).map((_, index) => {
+            return <div key={`empty-${index}`} style={boxStyle} />
+          })}
+
+          {daysInMonth.map((day, index) => {
+            const formattedDay = format(day, "yyyy-MM-dd");
+            const eventsForDay = eventsByDate[formattedDay] || [];
+
+            return (
+              <div key={index} style={{ position: "relative" }}>
+                <div
+                  onClick={() => handleDayClick(day)}
+                  style={selectedDay === day ? hoveredBoxStyle : boxStyle}>
+                  {format(day, "d")}
+                </div>
+                {eventsForDay.map((event, eventIndex) => {
+                  return (
+                    <div key={`event-${index}-${eventIndex}`} className="event-indicator">
+                      {event.name}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
         </div>
-      )}
+      </div>
     </div>
   )
 }
