@@ -13,7 +13,7 @@ const HTTP_STATUS_NOK = 404;
 const INTERNAL_ERROR = 500;
 
 // Returns all chatrooms
-// curl --silent --include "http://localhost:5000/api/chat/rooms"
+// example: GET http://localhost:5000/api/chat/rooms
 chatRouter.get('/rooms', (req, res) => {
   const SQL_SELECT = `
     SELECT      *
@@ -32,7 +32,7 @@ chatRouter.get('/rooms', (req, res) => {
 });
 
 // Returns info of a chatroom by chatroom id
-// curl --silent --include "http://localhost:5000/api/chat/room?id=1"
+// example: GET http://localhost:5000/api/chat/room?id=1
 chatRouter.get('/room', (req, res) => {
   const { id } = req.query;
   if (!id) {
@@ -56,7 +56,7 @@ chatRouter.get('/room', (req, res) => {
 });
 
 // Returns ALL messages of a chatroom by chatroom id
-// curl --silent --include "http://localhost:5000/api/chat/messages?id=1"
+// example: GET http://localhost:5000/api/chat/messages?id=1
 chatRouter.get('/messages', (req, res) => {
   const { id } = req.query;
   if (!id) {
@@ -85,7 +85,9 @@ chatRouter.get('/messages', (req, res) => {
 
 // Inserts chatroom into chatroom table
 // Name can't be null
-// curl -X POST http://localhost:5000/api/chat -H "Content-Type: application/json" -d '{"name": "new room", "type" : 1}'
+// example: POST http://localhost:5000/api/chat
+// Content-Type: application/json
+// {"name": "new room", "type" : 1}
 chatRouter.post('', (req, res) => {
   const { name, description, type } = req.body;
   if (!name) {
@@ -108,7 +110,9 @@ chatRouter.post('', (req, res) => {
 
 // Inserts message into message table
 // All fields are required
-// curl -X POST http://localhost:5000/api/chat/message -H "Content-Type: application/json" -d '{"user_id": 1, "chatroom_id" : 1, "text" : "this message has been inserted", "datetime" : "2024-04-16 16:45:32"}'
+// example: POST http://localhost:5000/api/chat/message
+// Content-Type: application/json
+// {"user_id": 1, "chatroom_id" : 1, "text" : "this message has been inserted", "datetime" : "2024-04-16 16:45:32"}
 chatRouter.post('/message', (req, res) => {
   const { user_id, chatroom_id, text, datetime } = req.body;
   if (!user_id || !chatroom_id || !text || !datetime) {
@@ -130,7 +134,9 @@ chatRouter.post('/message', (req, res) => {
 });
 
 // Update room's info by chatroom id
-// curl -X PUT http://localhost:5000/api/chat/room/update/1 -H "Content-Type: application/json" -d '{"name" : "new name", "description" : "new description", "type" : 0}'
+// example: PUT http://localhost:5000/api/chat/room/update/1
+// Content-Type: application/json
+// {"name" : "new name", "description" : "new description", "type" : 0}
 chatRouter.put('/room/update/:id', (req, res) => {
   const id = req.params.id
   const { name, description, type } = req.body
@@ -155,7 +161,7 @@ chatRouter.put('/room/update/:id', (req, res) => {
 });
 
 // Delete chatroom
-// curl -X DELETE http://localhost:5000/api/chat/room/delete/1
+// example: DELETE http://localhost:5000/api/chat/room/delete/1
 chatRouter.delete('/room/delete/:id', (req, res) => {
   const id = req.params.id
 
@@ -175,7 +181,7 @@ chatRouter.delete('/room/delete/:id', (req, res) => {
 });
 
 // Delete message
-// curl -X DELETE http://localhost:5000/api/chat/message/delete/1
+// example: DELETE http://localhost:5000/api/chat/message/delete/1
 chatRouter.delete('/message/delete/:id', (req, res) => {
   const id = req.params.id
 

@@ -3,8 +3,8 @@ import { Button, Typography, TextField, Box, Modal } from '@mui/material';
 import { SetChatroomsContext } from '../contexts/SetChatroomsContext';
 
 const AddChatRoomModal = ({ open, handleClose }) => {
-  const [name, setName] = useState(''); // Add a useState hook for the name input
-  const [description, setDescription] = useState(''); // Add a useState hook for the description input
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
   const setChatrooms = useContext(SetChatroomsContext);
   const handleSubmit = (event) => {
     event.preventDefault();

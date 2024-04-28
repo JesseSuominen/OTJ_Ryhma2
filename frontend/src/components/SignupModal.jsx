@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Box, Typography, TextField, Button } from '@mui/material';
 
-import { setTokenContext } from '../contexts/setTokenContext';
 import ErrorPopup from './ErrorPopup';
 
 import { useTheme } from '@mui/material/styles';
@@ -33,7 +32,7 @@ const SignupModal = ({ open, handleClose, setToken }) => {
                     return;
                 }
                 setToken(data);
-                localStorage.setItem('token', JSON.stringify(data)); // Save the token to localStorage
+                localStorage.setItem('token', JSON.stringify(data));
                 handleClose(); // Close the modal after the request is successful
             })
             .catch((error) => {

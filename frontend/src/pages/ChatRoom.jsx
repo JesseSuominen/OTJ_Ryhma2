@@ -7,10 +7,10 @@ import io from 'socket.io-client';
 
 const ChatRoom = () => {
   const { id } = useParams(); // Get the chatroom ID from the URL parameters
-  const [message, setMessage] = useState(''); // Add a useState hook for the message
-  const [messages, setMessages] = useState([]); // Add a useState hook for the messages
-  const [socket, setSocket] = useState(null); // Add a useState hook for the socket
-  const [roomData, setRoomData] = useState(null); // Add a useState hook for the room data
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState([]);
+  const [socket, setSocket] = useState(null);
+  const [roomData, setRoomData] = useState(null);
   const [isUserInteracting, setIsUserInteracting] = useState(false);
 
   const messagesEndRef = useRef(null);

@@ -24,7 +24,6 @@ const ChatInput = ({ chatroomId, message, setMessage, sendMessage }) => {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        // width: '100%', // You might also need to set the width to 100%
       }}
     >
       <TextField
