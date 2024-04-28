@@ -29,3 +29,28 @@ IMPORTANT: make user can fail, if the user is not deleted
 # Other
 
 UI testing was done manually.
+For example:
+- Header shows links to: Home, Calendar and Chat. Also Login and Sign up buttons. If logged in, shows logout button
+- Home shows Buttons for: Home, Calendar and Chat
+
+- clicking from Home (no user) -> Calendar: shows "Please Login to view Calendar." -text
+- clicking from Home (no user) -> Chat: shows "No chatrooms available." -text
+
+- clicking Signup shows signup form
+    - on error show that Authorization failed
+    - on succes state to logged in
+- clicking Login shows login form
+    - on error show that Authorization failed
+    - on succes state to logged in
+
+- clicking from Home -> Calendar: progress and events
+    - Add progress: progression bar gets increased
+    - Add event: opens minicalendar where you can select start and end date, fills calendar with your event(s)
+    - clicking an event (date on calendar) opens up data from event and it can be deleted
+
+- clicking from Home -> Chat: All possible joinable chatrooms and creating a room
+    - clicking join on a chatroonm
+        - your messages are on right side and others on left side
+        - you can send a message
+
+- clicking logout removes token and places you back to home page
