@@ -12,6 +12,7 @@ const BAD_REQUEST = 400;
 const HTTP_STATUS_NOK = 404;
 const INTERNAL_ERROR = 500;
 
+
 // Returns all chatrooms
 // example: GET http://localhost:5000/api/chat/rooms
 chatRouter.get('/rooms', (req, res) => {
@@ -104,7 +105,7 @@ chatRouter.post('', (req, res) => {
       console.error('Error creating chatroom:', err);
       return res.status(BAD_REQUEST).json({ error: 'Failed to create chatroom' });
     }
-    res.status(HTTP_STATUS_CREATED).json({ message: 'Chatroom created successfully' });
+    res.status(HTTP_STATUS_CREATED).json({ message: 'Chatroom created successfully', id: this.lastID });
   });
 });
 
@@ -129,7 +130,7 @@ chatRouter.post('/message', (req, res) => {
       console.error('Error creating message:', err);
       return res.status(BAD_REQUEST).json({ error: 'Failed to create message' });
     }
-    res.status(HTTP_STATUS_CREATED).json({ message: 'Message created successfully' });
+    res.status(HTTP_STATUS_CREATED).json({ message: 'Message created successfully', id: this.lastID  });
   });
 });
 

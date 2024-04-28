@@ -45,6 +45,8 @@ calendarRouter.post('/event', (req, res) => {
   const { name, description, start_date, end_date } = req.body;
   const { id } = req.query;
 
+  console.log('E',  {...req.body, id: id});
+
   // Check if start_date is provided
   if (!start_date) {
     return res.status(BAD_REQUEST).json({ error: 'Start date is required' });
@@ -63,11 +65,13 @@ calendarRouter.post('/event', (req, res) => {
 
   // Execute the INSERT statement with the provided parameters
   db.run(SQL_INSERT, [name, description, start_date, end_date, id], function (err) {
+    console.log('E',  {...req.body, id: id});
     if (err) {
+      
       console.error('Error inserting event:', err);
       return res.status(BAD_REQUEST).json({ error: 'Failed to create event' });
     }
-    res.status(HTTP_STATUS_CREATED).json({ message: 'Event created successfully' });
+    res.status(HTTP_STATUS_CREATED).json({ message: 'Event created successfully', id: this.lastID});
   });
 });
 
@@ -160,7 +164,7 @@ calendarRouter.post('/hour', (req, res) => {
       console.error('Error inserting workhours:', err);
       return res.status(BAD_REQUEST).json({ error: 'Failed to create workhour' });
     }
-    res.status(HTTP_STATUS_CREATED).json({ message: 'Workhour created successfully' });
+    res.status(HTTP_STATUS_CREATED).json({ message: 'Workhour created successfully', id: this.lastID });
   });
 });
 

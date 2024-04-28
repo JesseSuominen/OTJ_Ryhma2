@@ -7,7 +7,6 @@ import { setTokenContext } from '../contexts/setTokenContext';
 
 
 const Chat = () => {
-<<<<<<< HEAD
     const [chatrooms, setChatrooms] = useState([]); // Add a useState hook for the chatrooms
     const { token, setToken } = useContext(setTokenContext); // Get the token from the setTokenContext
     const storedData = JSON.parse(localStorage.getItem('token'));
@@ -15,10 +14,6 @@ const Chat = () => {
         
         setToken(storedData);
     }, []);
-=======
-    const [chatrooms, setChatrooms] = useState([]);
-    const { token } = useContext(setTokenContext);
->>>>>>> development
     useEffect(() => {
 
         const storedData = JSON.parse(localStorage.getItem('token'));
