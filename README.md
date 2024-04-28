@@ -3,6 +3,10 @@
 Authors:
 Miika Hupli, Jesse Suominen, Markus Heinonen
 
+Project made for the Course
+- 5G00EV17-3003 Ohjelmistotuotannon jatkokurssi
+- Tampere University of Applied Sciences (TAMK)
+
 # Introduction
 
 This is a website project that will be run locally on your computer.
