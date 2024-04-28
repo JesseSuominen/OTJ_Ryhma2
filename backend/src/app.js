@@ -13,7 +13,6 @@ const { pbkdf2 } = require('crypto');
 const calendarMw = require('./middlewares/calendarMw');
 const chatMw = require('./middlewares/chatMw');
 const userMw = require('./middlewares/userMw');
-// const forumMw = require('./middlewares/forumMw');
 const calendarRouter = require('./routes/calendarRoute');
 const chatRouter = require('./routes/chatRoute');
 const userRouter = require('./routes/userRoute');
@@ -25,12 +24,6 @@ const path = require('path');
 const dbPath = path.resolve(__dirname, '../database.db');
 const db = new sqlite3.Database(dbPath);
 
-// to be done if time left
-// const forumRouter = require('./routes/forumRoute');
-// app.get('/api/forum', forumMw, forumRouter)
-
-// app.use(morgan('dev'));
-// app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
@@ -64,25 +57,25 @@ io.on('connection', (socket) => {
           console.error('Error inserting message:', err);
           return;
       }
-  
+
       const messageId = this.lastID; // Get the ID of the inserted message
-  
+
       // Fetch the username of the user who sent the message
       const SQL_SELECT = `
           SELECT username
           FROM user
           WHERE id = ?
       `;
-  
+
       db.get(SQL_SELECT, [message.user_id], (err, row) => {
           if (err) {
               console.error('Error fetching username:', err);
               return;
           }
-  
+
           // Add the username to the message object
           message.username = row.username;
-  
+
           // Broadcast the message to the appropriate room
           io.to(message.chatroom_id).emit('message', message);
       });

@@ -17,7 +17,7 @@ const HTTP_STATUS_NOK = 404;
 const INTERNAL_ERROR = 500;
 
 // Returns usernames and ids
-// curl --silent --include "http://localhost:5000/api/user/usernames"
+// example: GET http://localhost:5000/api/user/usernames
 userRouter.get('/usernames', (req, res) => {
   const SQL_SELECT = `
       SELECT    id,
@@ -41,7 +41,7 @@ userRouter.get('/usernames', (req, res) => {
 
 
 // Returns password belonging to the user id
-// curl --silent --include "http://localhost:5000/api/user/password?id=1"
+// example: GET http://localhost:5000/api/user/password?id=1
 userRouter.get('/password', (req, res) => {
   const { id } = req.query;
   if (!id) {
@@ -65,14 +65,11 @@ userRouter.get('/password', (req, res) => {
 });
 
 
-
-
-
-
-
 // Inserts user into user table
 // username and password can't be null
-// curl -X POST http://localhost:5000/api/user/post -H "Content-Type: application/json" -d '{"username": "added_user", "password": "generic_pw"}'
+// example: POST http://localhost:5000/api/user/post
+// Content-Type: application/json
+// {"username": "added_user", "password": "generic_pw"}
 
 const registerUser = async (req, res) => {
   const { username, password } = req.body;
@@ -102,15 +99,15 @@ const registerUser = async (req, res) => {
       if (err) {
         return res.status(500).json({message: "Something went wrong"})
       } else {
-        
+
         if(row) {
           if(row.username) {
 
             return res.status(422).json({message: "user exists"})
-            
-          } 
+
+          }
         } else {
-          
+
           let hashedPw = await hashPassword();
 
 
@@ -136,7 +133,7 @@ const registerUser = async (req, res) => {
                   process.env.JWT_KEY,
                   { expiresIn: '1h' }
                 )
-            
+
                 return res.status(HTTP_STATUS_CREATED).json(
                   {
                     username,
@@ -146,8 +143,8 @@ const registerUser = async (req, res) => {
                 )
           });
         }
-        
-        
+
+
       }
     });
 
@@ -189,11 +186,11 @@ const loginUser = async (req, res) => {
       if (err) {
         return res.status(500).json({message: "Something went wrong"})
       } else {
-        
+
         if(row) {
           if(row.username) {
 
-            
+
             let isValid = await bcrypt.compare(password, row.password);
             if(!isValid) {
               return res.status(401).json({message: "Invalid password"})
@@ -206,7 +203,7 @@ const loginUser = async (req, res) => {
               process.env.JWT_KEY,
               { expiresIn: '1h' }
             )
-            
+
             return res.status(HTTP_STATUS_OK).json(
               {
                 username,
@@ -214,13 +211,13 @@ const loginUser = async (req, res) => {
                 user_id: row.id,
               }
             )
-            
-          } 
+
+          }
         } else {
           return res.status(401).json({message: "Invalid username"})
         }
-        
-        
+
+
       }
     });
 
@@ -234,7 +231,9 @@ const loginUser = async (req, res) => {
 userRouter.post('/login', loginUser);
 
 // Update user's password by user's id
-// curl -X PUT http://localhost:5000/api/user/update/1 -H "Content-Type: application/json" -d '{"password": "new_password123"}'
+// example: PUT http://localhost:5000/api/user/update/1
+// Content-Type: application/json
+// {"password": "new_password123"}
 userRouter.put('/update/:id', (req, res) => {
   const id = req.params.id
   const { password } = req.body
@@ -257,7 +256,7 @@ userRouter.put('/update/:id', (req, res) => {
 });
 
 // Delete user
-// curl -X DELETE http://localhost:5000/api/user/delete/1
+// example: DELETE http://localhost:5000/api/user/delete/1
 userRouter.delete('/delete/:id', (req, res) => {
   const id = req.params.id
 

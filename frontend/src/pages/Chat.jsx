@@ -7,6 +7,7 @@ import { setTokenContext } from '../contexts/setTokenContext';
 
 
 const Chat = () => {
+<<<<<<< HEAD
     const [chatrooms, setChatrooms] = useState([]); // Add a useState hook for the chatrooms
     const { token, setToken } = useContext(setTokenContext); // Get the token from the setTokenContext
     const storedData = JSON.parse(localStorage.getItem('token'));
@@ -14,6 +15,10 @@ const Chat = () => {
         
         setToken(storedData);
     }, []);
+=======
+    const [chatrooms, setChatrooms] = useState([]);
+    const { token } = useContext(setTokenContext);
+>>>>>>> development
     useEffect(() => {
 
         const storedData = JSON.parse(localStorage.getItem('token'));
@@ -32,7 +37,7 @@ const Chat = () => {
 
     }, [token]); // Add an empty dependency array so the effect only runs once
     return (
-        <SetChatroomsContext.Provider value={setChatrooms}> {/* Provide the setChatrooms function */}
+        <SetChatroomsContext.Provider value={setChatrooms}>
             <Box maxHeight="90vh" height="90vh">
                 {storedData && storedData.token && <AddChatRoom />}
                 <Box display="flex" flexWrap="wrap" overflow="auto" maxHeight="80vh" >
@@ -50,22 +55,3 @@ const Chat = () => {
 };
 
 export default Chat;
-
-// CREATE TABLE chatroom
-// (
-//     id              INTEGER     PRIMARY KEY     NOT NULL    UNIQUE
-//     , name          VARCHAR(80)                 NOT NULL
-//     , description   VARCHAR(2000)
-//     , type          INTEGER
-// );
-
-// CREATE TABLE message
-// (
-//     id              INTEGER     PRIMARY KEY     NOT NULL    UNIQUE
-//     , user_id       INTEGER                     NOT NULL
-//     , chatroom_id   INTEGER                     NOT NULL
-//     , text          VARCHAR(5000)               NOT NULL
-//     , datetime      TIMESTAMP                   NOT NULL
-//     , FOREIGN KEY (user_id) REFERENCES user(id)
-//     , FOREIGN KEY (chatroom_id) REFERENCES chatroom(id)
-// );
