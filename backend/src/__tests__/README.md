@@ -19,7 +19,11 @@ Each of these test cases would send a request to the respective API endpoint and
 
 The prerequirement is that Login succeeds.
 
-## Usage
+# Usage
 
 Make sure that backend is not running on this computer
 start tests with -npm run test
+
+# Other
+
+UI testing was done manually.
