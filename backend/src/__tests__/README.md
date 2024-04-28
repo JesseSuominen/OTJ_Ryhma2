@@ -21,10 +21,10 @@ The prerequirement is that Login succeeds.
 
 # Usage
 
-Make sure that backend is not running on this computer
-start tests with -npm run test
-"succeeded test.PNG" shows the expected result.
-IMPORTANT: make user can fail, if the user is not deleted
+Make sure that backend is not running on this computer  
+start tests with -npm run test  
+"succeeded test.PNG" shows the expected result.  
+IMPORTANT: make user can fail, if the user is not deleted  
 
 # Other
 
