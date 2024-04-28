@@ -13,7 +13,7 @@ const HTTP_STATUS_NOK = 404;
 const INTERNAL_ERROR = 500;
 
 // Returns events of a user by user id
-// curl --silent --include "http://localhost:5000/api/calendar/events?id=1"
+// example: GET http://localhost:5000/api/calendar/events?id=1
 calendarRouter.get('/events', (req, res) => {
   const { id } = req.query;
   if (!id) {
@@ -38,7 +38,9 @@ calendarRouter.get('/events', (req, res) => {
 
 // Inserts an event by user id
 // start_date can't be null
-// curl -X POST http://localhost:5000/api/calendar/event?id=1 -H "Content-Type: application/json" -d '{"name" : "test event added", "description" : "this is added through api endpoint", "start_date" : "2024-04-16 16:45:32"}'
+// example: POST http://localhost:5000/api/calendar/event?id=1
+// Content-Type: application/json
+// {"name" : "test event added", "description" : "this is added through api endpoint", "start_date" : "2024-04-16 16:45:32"}
 calendarRouter.post('/event', (req, res) => {
   const { name, description, start_date, end_date } = req.body;
   const { id } = req.query;
@@ -70,7 +72,7 @@ calendarRouter.post('/event', (req, res) => {
 });
 
 // Returns workhours of a user by user id
-// curl --silent --include "http://localhost:5000/api/calendar/hours?id=1"
+// example: GET http://localhost:5000/api/calendar/hours?id=1
 calendarRouter.get('/hours', (req, res) => {
   const { id } = req.query;
   if (!id) {
@@ -94,7 +96,7 @@ calendarRouter.get('/hours', (req, res) => {
 });
 
 // Returns amount of workhours of a user for given month
-// curl --silent --include "http://localhost:5000/api/calendar/monthlyhours?id=1&month=4&year=2024"
+// example: GET http://localhost:5000/api/calendar/monthlyhours?id=1&month=4&year=2024
 calendarRouter.get('/monthlyhours', (req, res) => {
   const { id, month, year } = req.query;
   if (!id) {
@@ -131,7 +133,9 @@ calendarRouter.get('/monthlyhours', (req, res) => {
 
 // Inserts workhours by user id
 // amount and date can't be null
-// curl -X POST http://localhost:5000/api/calendar/hour?id=1 -H "Content-Type: application/json" -d '{"amount" : 3, "name" : "working on tests", "date" : "2024-04-17"}'
+// example: POST http://localhost:5000/api/calendar/hour?id=1
+// Content-Type: application/json"
+// {"amount" : 3, "name" : "working on tests", "date" : "2024-04-17"}'
 calendarRouter.post('/hour', (req, res) => {
   const { id } = req.query;
   const { amount, name, date } = req.body;
@@ -161,7 +165,9 @@ calendarRouter.post('/hour', (req, res) => {
 });
 
 // Update event's info by event id
-// curl -X PUT http://localhost:5000/api/calendar/event/update/1 -H "Content-Type: application/json" -d '{"name" : "new name", "description" : "new description", "start_date" : "2024-04-22", "end_date" : "2024-04-29"}'
+// example: PUT http://localhost:5000/api/calendar/event/update/1
+// Content-Type: application/json"
+// {"name" : "new name", "description" : "new description", "start_date" : "2024-04-22", "end_date" : "2024-04-29"}
 calendarRouter.put('/event/update/:id', (req, res) => {
   const id = req.params.id
   const { name, description, start_date, end_date } = req.body
@@ -187,7 +193,7 @@ calendarRouter.put('/event/update/:id', (req, res) => {
 });
 
 // Delete event
-// curl -X DELETE http://localhost:5000/api/calendar/event/delete/1
+// example: DELETE http://localhost:5000/api/calendar/event/delete/1
 calendarRouter.delete('/event/delete/:id', (req, res) => {
   const id = req.params.id
 
@@ -207,7 +213,9 @@ calendarRouter.delete('/event/delete/:id', (req, res) => {
 });
 
 // Update workhours' info by workhour id
-// curl -X PUT http://localhost:5000/api/calendar/hour/update/1 -H "Content-Type: application/json" -d '{"amount" : 0, "name" : "new name", "date" : "2024-04-29"}'
+// example: PUT http://localhost:5000/api/calendar/hour/update/1
+// Content-Type: application/json
+// {"amount" : 0, "name" : "new name", "date" : "2024-04-29"}
 calendarRouter.put('/hour/update/:id', (req, res) => {
   const id = req.params.id
   const { amount, name, date } = req.body
@@ -232,7 +240,7 @@ calendarRouter.put('/hour/update/:id', (req, res) => {
 });
 
 // Delete event
-// curl -X DELETE http://localhost:5000/api/calendar/hour/delete/1
+// example: DELETE http://localhost:5000/api/calendar/hour/delete/1
 calendarRouter.delete('/hour/delete/:id', (req, res) => {
   const id = req.params.id
 

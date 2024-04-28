@@ -1,20 +1,20 @@
 import React, { useState, useContext } from 'react';
 import { Box, Typography, Button } from '@mui/material';
 import { styled } from '@mui/system';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { useNavigate } from 'react-router-dom';
 import { setTokenContext } from '../contexts/setTokenContext';
 import LoginModal from '../components/LoginModal';
 import SignupModal from '../components/SignupModal';
 
 const Home = () => {
-  const navigate = useNavigate(); // Initialize the navigate function from useNavigate hook
+  const navigate = useNavigate();
   const [loginOpen, setLoginOpen] = useState(false);
   const [signupOpen, setSignupOpen] = useState(false);
   const { token, setToken } = useContext(setTokenContext);
 
   const handleLogout = () => {
     setToken(''); // Clear the token from the state
-    localStorage.removeItem('token'); // Remove the token from localStorage
+    localStorage.removeItem('token');
   };
 
   // Function to handle login button click and open login modal
@@ -35,7 +35,7 @@ const Home = () => {
   const handleClick = (route) => {
     // Handle button click event to navigate to specific route
     console.log(`Navigating to ${route}`);
-    navigate(route); // Use the navigate function to navigate to the specified route
+    navigate(route);
   };
 
   return (

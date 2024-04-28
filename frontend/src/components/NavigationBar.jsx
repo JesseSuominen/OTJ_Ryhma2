@@ -13,7 +13,7 @@ const NavigationBar = () => {
   const navigate = useNavigate();
   const handleLogout = () => {
     setToken(''); // Clear the token from the state
-    localStorage.removeItem('token'); // Remove the token from localStorage
+    localStorage.removeItem('token');
     navigate('/')
   };
 
